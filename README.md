@@ -12,7 +12,9 @@ Please refer to the 4D Systems website, namingly the Workshop 4 Product Page, fo
 
 ## Installation
 
-Library folder should be placed in the C:\Users\(User name)\My Documents\Arduino\Libraries\ folder, or equivalent. (restart the IDE if already open)
+Library folder should be placed in the C:\Users\(User name)\My Documents\Arduino\Libraries\ folder, or equivalent. (restart the IDE if already open).
+
+PLEASE ensure that the old library (if installed) has been removed completely so it does not conflict.
 
 For more information on the installation, please refer to [Installing Additional Arduino Libraries] (http://arduino.cc/en/Guide/Libraries)
 
@@ -21,3 +23,7 @@ Open the ViSi-Genie project using Workshop4 and download to your display, connec
 ## Example Sketch
 
 Inside the library is an example sketch, to assist with getting started using this library. Inside is also a ViSi-Genie Workshop4 project, which can be used on a range of 4D Systems displays (designed on a uLCD-32PTU however can be changed via Workshop4 menu). It illustrates how to use some of the commands in the library include Read Object, Write Object, Reported Messages, Write Contrast and Write String.
+
+## Tested with
+
+This library has been tested on the Duemilanove, Uno, Mega 2560 and Due. Any problems discovered with this library, please contact technical support so fixes can be put in place, or seek support from our forum.

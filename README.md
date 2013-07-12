@@ -1,7 +1,7 @@
 ![image](http://www.4dsystems.com.au/imagenes/header.png)
 
-ViSi-Genie-Arduino-Library
-=============================
+ViSi-Genie-Arduino-Library - NEW VERSION
+========================================
 
 Arduino Library for 4D Systems ViSi-Genie Environement 
 
@@ -12,10 +12,12 @@ Please refer to the 4D Systems website, namingly the Workshop 4 Product Page, fo
 
 ## Installation
 
-Library should be placed in the C:\Users\(User name)\My Documents\Arduino\Libraries\ folder, or equivalent. (restart the IDE if already open)
+Library folder should be placed in the C:\Users\(User name)\My Documents\Arduino\Libraries\ folder, or equivalent. (restart the IDE if already open)
 
 For more information on the installation, please refer to [Installing Additional Arduino Libraries] (http://arduino.cc/en/Guide/Libraries)
 
+Open the ViSi-Genie project using Workshop4 and download to your display, connect the display to Arduino, reset the Arduino and it should work.
+
 ## Example Sketch
 
-Please refer to the Github Repository for the ViSi-Genie Arduino Calculator Demo
+Inside the library is an example sketch, to assist with getting started using this library. Inside is also a ViSi-Genie Workshop4 project, which can be used on a range of 4D Systems displays (designed on a uLCD-32PTU however can be changed via Workshop4 menu). It illustrates how to use some of the commands in the library include Read Object, Write Object, Reported Messages, Write Contrast and Write String.

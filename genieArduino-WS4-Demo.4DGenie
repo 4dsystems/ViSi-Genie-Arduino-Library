@@ -1,0 +1,185 @@
+﻿Version     0.0
+Platform    uLCD-32PTU-LR
+PlatRes     240x320
+Depends
+end
+Options
+    Genie
+    Speed                        115200
+    Checksum                     No
+    ResponseSize                 1
+    Multidrop                    No
+    Destination                  1
+    SndBuf                       2
+end
+Form
+    Name                         Form0
+    Bgtype                       Color
+    Color                        BLACK
+    Image                        (None)
+    Source.Height                0
+    Source.Left                  0
+    Source.Top                   0
+    Source.Width                 0
+    OnActivate                   ''
+    OnCreate                     ''
+    OnRepeat                     ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+LedDigits
+    Name                         Leddigits0
+    Color                        BLACK
+    Decimals                     0
+    Digits                       2
+    Height                       73
+    LeadingZero                  Yes
+    Left                         4
+    OutlineColor                 BLACK
+    Palette.High                 YELLOW
+    Palette.Low                  BLACK
+    Top                          8
+    Visible                      Yes
+    Width                        105
+    OnChanged                    ''
+    OnTouchMoving                ''
+    OnTouchPressed               ''
+    OnTouchReleased              ''
+end
+Coolgauge
+    Name                         Coolgauge0
+    Analogue                     (None)
+    Arc.Color                    0xFFEFE0
+    Arc.Opacity                  200
+    Arc.StartAngle               135
+    Arc.StopAngle                405
+    Threshold.Center             25
+    Threshold.Color              0xFFD0AF
+    Threshold.EndValue           100
+    Threshold.Opacity            200
+    Threshold.Span               25
+    Threshold.StartAngle         135
+    Threshold.StartValue         0
+    Threshold.SweepAngle         270
+    Threshold.ThresholdKind      Angle
+    Arc.Width                    0.03
+    CircleEndValue               360
+    CircleStartValue             0
+    DialText                     ''
+    Digit.Alignment              Center
+    Digit.BackGroundColor        0xFFEFE0
+    Digit.BackGroundOpacity      30
+    Digit.Color                  0x902F00
+    Digit.Visible                Yes
+    DivisionColor                0x902F00
+    DivisionCount                10
+    DivisionWidth                5
+    EqualDimensions              Yes
+    Font.Color                   0x902F00
+    Font.Effects                 []
+    Font.Name                    Tahoma
+    Font.Size                    14
+    Font.Style                   []
+    Height                       192
+    Innercircle.Color            0xFFD0AF
+    Gloss.Color                  clWhite
+    Gloss.Opacity                72
+    Innercircle.Opacity          150
+    Left                         120
+    Logarithmic                  No
+    LogarithmicBase              10
+    MaximumValue                 100
+    MinimumValue                 0
+    Needle.Color                 0xFFD0AF
+    Needle.InnerCenterColor      0xFFD0AF
+    Needle.InnerCenterColorTo    0xFFD0AF
+    Needle.InnerCenterOpacity    255
+    Needle.OuterCenterColor      0xFFD0AF
+    Needle.OuterCenterColorTo    clBlue
+    Needle.OuterCenterOpacity    255
+    Needle.ShineColor            0xFFEFE0
+    Needle.ShineColorTo          0xD0D0D0
+    OuterCircle.Color            0xFFD0AF
+    OuterCircle.Opacity          100
+    OuterCircle.Width            0.03
+    OuterRim.Color               0x908070
+    OuterRim.Opacity             255
+    OuterRim.Width               2
+    ShowValues                   Yes
+    SubDivisionColor             0x902F00
+    SubDivisionCount             3
+    SubDivisionWidth             2
+    TextRendering                ClearType
+    Timer                        (None)
+    Top                          0
+    ValueFont.Color              0x902F00
+    ValueFont.Effects            []
+    ValueFont.Name               Tahoma
+    ValueFont.Size               11
+    ValueFont.Style              []
+    ValueFormat                  0
+    Visible                      Yes
+    Width                        189
+    OnChanged                    ''
+end
+GSlider
+    Name                         Slider0
+    Bevel.BorderColor            clBtnFace
+    Bevel.BorderWidth            0
+    Bevel.InnerColor             BLACK
+    Bevel.InnerHighlight         clBtnHighlight
+    Bevel.InnerOutline           None
+    Bevel.InnerShadow            clBtnShadow
+    Bevel.InnerSpace             1
+    Bevel.InnerStyle             Lowered
+    Bevel.Innerwidth             2
+    Bevel.OuterColor             clBtnFace
+    Bevel.OuterHighlight         clBtnHighlight
+    Bevel.OuterOutline           Outer
+    Bevel.OuterShadow            clBtnShadow
+    Bevel.OuterSpace             0
+    Bevel.OuterStyle             Raised
+    Bevel.Outerwidth             1
+    Bevel.Visible                Yes
+    BorderColor                  clBtnFace
+    BorderWidth                  1
+    Color                        BLACK
+    Height                       151
+    Left                         20
+    Maxvalue                     100
+    Minvalue                     0
+    Orientation                  Vertical
+    Palette.High                 clLime
+    Palette.Low                  0x005100
+    Spacing                      1
+    SolidFill                    Yes
+    TickWidth                    1
+    Top                          88
+    Visible                      Yes
+    Width                        63
+    OnChanged                    'Report Message'
+    OnChanging                   ''
+end
+Strings
+    Name                         Strings0
+    Alignment                    Left
+    BGcolor                      AQUA
+    Height                       38
+    FGcolor                      BLACK
+    Font.Bold                    No
+    Font.CharSet                 ANSI
+    Font.Italic                  No
+    Font.Name                    '4D Font3 (8x12)'
+    Font.Opaque                  Yes
+    Font.Size                    12
+    Font.Strikethrough           No
+    Font.Underline               No
+    Left                         116
+    Strings                      ''
+    StringsStyle                 Message
+    Top                          200
+    Visible                      Yes
+    Width                        200
+    OnChanged                    ''
+end

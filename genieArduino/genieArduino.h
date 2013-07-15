@@ -34,7 +34,7 @@
 
 #undef	GENIE_DEBUG
 
-#define	GENIE_VERSION	"GenieArduino 12-Jul-2013"
+#define	GENIE_VERSION	"GenieArduino 16-Jul-2013"
 
 // Genie commands & replys:
 
@@ -193,7 +193,7 @@ extern void		pulse (int pin);
 #define SERIAL_1
 #endif
 
-#if defined(_VARIANT_ARDUINO_DUE_X_) // need to research this value 
+#if defined(_VARIANT_ARDUINO_DUE_X_) 
 #define SERIAL
 #define SERIAL_1
 #define SERIAL_2

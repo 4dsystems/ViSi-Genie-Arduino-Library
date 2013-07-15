@@ -1,4 +1,4 @@
-/////////////////////////// GenieArduino V4 /////////////////////////
+/////////////////////////// GenieArduino 16/07/2013 /////////////////////////
 //
 //      Library to utilise the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
@@ -365,7 +365,7 @@ bool genieDequeueEvent(genieFrame * buff) {
 //
 // Parms:	uint8_t * data, a pointer to the user's data
 //
-// Returns:	TRUE if there was an empty location in the queu
+// Returns:	TRUE if there was an empty location in the queue
 //				to copy the data into
 //			FALSE if not
 // Sets:	ERROR_REPLY_OVR if there was no room in the queue
@@ -390,7 +390,7 @@ bool _genieEnqueueEvent (uint8_t * data) {
 //
 // Send a read object command to the Genie display. Note that this 
 // function does not wait for the reply, that will be read in due 
-// course by genieDoEvents() and sunsequently bu the user's event 
+// course by genieDoEvents() and subsequently by the user's event 
 // handler.
 //
 
@@ -471,7 +471,8 @@ uint16_t genieWriteObject (uint16_t object, uint16_t index, uint16_t data)
 // Alter the display contrast (backlight)
 //
 // Parms:	uint8_t value: The required contrast setting, only
-//							values from 0 to 15 are valid
+//		values from 0 to 15 are valid. 0 or 1 for most displays
+//      and 0 to 15 for the uLCD-43
 //
 void genieWriteContrast (uint16_t value) {
 	unsigned int checksum ;
@@ -537,7 +538,7 @@ uint16_t genieWriteStrU (uint16_t index, char *string) {
 
 /////////////////// genieAttachEventHandler //////////////////////
 //
-// "Attaches" a pointer to the users even handler by writing 
+// "Attaches" a pointer to the users event handler by writing 
 // the pointer into the variable used by doEVents()
 //
 void genieAttachEventHandler (genieUserEventHandlerPtr handler) {
@@ -689,7 +690,7 @@ void genieSetup (uint32_t baud) {
 /////////////////////////////////// genieBegin ///////////////////////////////////////////
 // 
 // 
-//	boolean genieBegin (uint8_t port, uint32_t baud, uint8_t rxpin, uint8_t txpin) 
+//	boolean genieBegin (uint8_t port, uint32_t baud) 
 //
 //	uint8_t port:	A port number/type from the genie_port_types enum, ie
 //					GENIE_SERIAL, standard serial port on all Arduinos

@@ -193,7 +193,7 @@ extern void		pulse (int pin);
 #define SERIAL_1
 #endif
 
-#if defined(_VARIANT_ARDUINO_DUE_X_) 
+#if defined(__SAM3X8E__) 
 #define SERIAL
 #define SERIAL_1
 #define SERIAL_2

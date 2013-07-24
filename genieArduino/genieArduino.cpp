@@ -1,4 +1,4 @@
-/////////////////////////// GenieArduino 16/07/2013 /////////////////////////
+/////////////////////////// GenieArduino 24/07/2013 /////////////////////////
 //
 //      Library to utilise the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
@@ -30,7 +30,7 @@
 #include "genieArduino.h"
 
 ////////////////////////////////////////////////////////////
-// Functions not avaialble to the user code
+// Functions not available to the user code
 //
 void		_geniePutchar_Serial	(uint8_t c, uint32_t baud);
 void		_geniePutchar_Serial1 	(uint8_t c, uint32_t baud);
@@ -57,7 +57,7 @@ bool		_genieEnqueueEvent		(uint8_t * data);
 #endif
 
 //////////////////////////////////////////////////////////////
-// A structure to hold up to MAX_GENIE_EVENTS events recaive
+// A structure to hold up to MAX_GENIE_EVENTS events receive
 // from the display
 //
 static genieEventQueueStruct _genieEventQueue;
@@ -75,7 +75,7 @@ static uint8_t *_genieLinkState = &_genieLinkStates[0];
 
 //////////////////////////////////////////////////////////////
 // Number of mS the genieGetChar() function will wait before
-// giing up on the display
+// giving up on the display
 static int _genieTimeout = TIMEOUT_PERIOD;
 
 //////////////////////////////////////////////////////////////
@@ -85,6 +85,9 @@ static int _genieTimeouts = 0;
 //////////////////////////////////////////////////////////////
 // Global error variable
 static int _genieError = ERROR_NONE;
+
+
+static uint8_t	rxframe_count = 0;
 
 //////////////////////////////////////////////////////////////
 // Number of fatal errors encountered
@@ -160,14 +163,25 @@ bool genieEventIs(genieFrame * e, uint8_t cmd, uint8_t object, uint8_t index) {
 // whichever comes first.
 //
 void _genieWaitForIdle (void) {
-	for (long timeout = millis() + _genieTimeout ; millis() < timeout;) {
-		genieDoEvents();
+	uint16_t do_event_result;
+	long timeout = millis() + _genieTimeout;
+
+	for ( ; millis() < timeout;) {
+		do_event_result = genieDoEvents();
+
+		// if there was a character received from the 
+		// display restart the timeout because doEvents
+		// is in the process of receiving something
+		if (do_event_result == GENIE_EVENT_RXCHAR) {
+			timeout = millis() + _genieTimeout;
+		}
+		
 		if (_genieGetLinkState() == GENIE_LINK_IDLE) {
 			return;
 		}
 	}
 	_genieError = ERROR_TIMEOUT;
-	_handleError ();
+	_handleError();
 	return;
 }
 
@@ -176,8 +190,10 @@ void _genieWaitForIdle (void) {
 // Push a link state onto a FILO stack
 //
 void _geniePushLinkState (uint8_t newstate) {
+
 	_genieLinkState++;
-	*_genieLinkState = newstate;
+	_genieSetLinkState(newstate);
+
 }
 
 ////////////////////// _geniePopLinkState //////////////////////
@@ -198,82 +214,135 @@ void _geniePopLinkState (void) {
 uint16_t genieDoEvents (void) {
 	uint8_t c;
 	static uint8_t	rx_data[6];
-	static uint8_t	count = 0;
 	static uint8_t	checksum = 0;
-
-	////////////////////////////////////////////
-	// This delay is required, I cannot determine why 
-	// Gordon's code had similar but with no comment
-	// Value < 101 cause the program to fail.
-	// A job for another day
-	delayMicroseconds (102) ;
 
 	c = _genieGetchar();
 
 	////////////////////////////////////////////
 	//
+	// If there are no characters to process and we have 
+	// queued events call the user's handler function.
+	//
 	if (_genieError == ERROR_NOCHAR) {
 		if (_genieEventQueue.n_events > 0) (_genieUserHandler)();
-		return _genieEventQueue.n_events;
+		return GENIE_EVENT_NONE;
 	}
-
-	////////////////////////////////////////////
-	// If the byte is not a NAK or an ACK and we are not
-	// already receiving a report frame save the current
-	// link state and enter a state that allows receiving
-	// the bytes from a report frame
-	if (c != GENIE_NAK && \
-		c != GENIE_ACK && \
-		_genieGetLinkState() != GENIE_LINK_RXFRAME) {
-		
-		// Save the current link state 
-		_geniePushLinkState(GENIE_LINK_RXFRAME);
-
-		// start the byte counter for report frame receiving
-		count = 0;		
-	}
-
-	////////////////////////////////////////////
-	// If we are waiting for an ACK or NAK handle that
-	if (_genieGetLinkState() == GENIE_LINK_WFAN) {
-		switch (c) {
-			case GENIE_ACK:
-				_genieSetLinkState(GENIE_LINK_IDLE);
-				return _genieEventQueue.n_events;
-
-			case GENIE_NAK:
-				_genieSetLinkState(GENIE_LINK_IDLE);
-				_genieError = ERROR_NAK;
-				_handleError();
-				return _genieEventQueue.n_events;
-		}
-	}
-
-	////////////////////////////////////////////
-	// We get here if we are in the process of receiving 
-	// a report frame. Accumulate GENIE_FRAME_SIZE bytes 
-	// into a local buffer then queue them as a frame into 
-	// the event queue
+	
+	///////////////////////////////////////////
 	//
-	checksum = (count == 0) ? c : checksum ^ c;
+	// Main state machine
+	//
+	switch (_genieGetLinkState()) {
+		case GENIE_LINK_IDLE:
+			switch (c) {
+				case GENIE_REPORT_EVENT:
+				// event frame out of the blue, set the link state
+				// and fall through to the frame-accumulate code
+				// at the end of this function
+				_geniePushLinkState(GENIE_LINK_RXEVENT);
+				break;
+					
+				default:
+				// error, bad character, no other character 
+				// is acceptable in this state
+				return GENIE_EVENT_RXCHAR;
+				
+			}
+			break;
+				
+		case GENIE_LINK_WFAN:
+			switch (c) {
 
-	rx_data[count] = c;
+				case GENIE_ACK:
+					_geniePopLinkState();
+					return GENIE_EVENT_RXCHAR;
 
-	if (count == GENIE_FRAME_SIZE -1) {
-		// all bytes received, if the CS is good 
-		// queue the frame and restore the link state
-		if (checksum == 0) {
-			_genieEnqueueEvent(rx_data);
-			count = 0;
-			_geniePopLinkState();
-			return _genieEventQueue.n_events;
-		} else {
-			_genieError = ERROR_BAD_CS;
-			_handleError();
-		}	
+				case GENIE_NAK:
+					_geniePopLinkState();
+					_genieError = ERROR_NAK;
+					_handleError();
+					return GENIE_EVENT_RXCHAR;
+			
+				case GENIE_REPORT_EVENT:
+					// event frame out of the blue while waiting for an ACK
+					// save/set the link state and fall through to the 
+					// frame-accumulate code at the end of this function
+					_geniePushLinkState(GENIE_LINK_RXEVENT);
+					break;
+
+				case GENIE_REPORT_OBJ:
+				default:
+					// error, bad character
+					return GENIE_EVENT_RXCHAR;	
+			}
+			break;
+
+		case GENIE_LINK_WF_RXREPORT: // waiting for the first byte of a report
+			switch (c) {
+			
+				case GENIE_REPORT_EVENT:
+				// event frame out of the blue while waiting for the first
+				// byte of a report frame
+				// save/set the link state and fall through to the
+				// frame-accumulate code at the end of this function
+				_geniePushLinkState(GENIE_LINK_RXEVENT);
+				break;
+
+				case GENIE_REPORT_OBJ:
+				// first byte of a report frame
+				// replace the GENIE_LINK_WF_RXREPORT link state 
+				// with GENIE_LINK_RXREPORT to indicate that we
+				// are now receiving a report frame
+				_geniePopLinkState();
+				_geniePushLinkState(GENIE_LINK_RXREPORT);
+				break;
+
+				case GENIE_ACK:
+				case GENIE_NAK:
+				default:
+				// error, bad character
+				return GENIE_EVENT_RXCHAR;
+//				break;
+			}
+
+		case GENIE_LINK_RXREPORT:		// already receiving report
+		case GENIE_LINK_RXEVENT:		// already receiving event
+		default:
+			break;
+		
 	}
-	count++;
-	return _genieEventQueue.n_events;
+
+	///////////////////////////////////////////////////////
+	// We get here if we are in the process of receiving 
+	// a report or event frame. Accumulate GENIE_FRAME_SIZE 
+	// bytes into a local buffer then queue them as a frame
+	// into the event queue
+	//
+	if (_genieGetLinkState() == GENIE_LINK_RXREPORT || \
+		_genieGetLinkState() == GENIE_LINK_RXEVENT) {
+			
+		checksum = (rxframe_count == 0) ? c : checksum ^ c;
+
+		rx_data[rxframe_count] = c;
+
+		if (rxframe_count == GENIE_FRAME_SIZE -1) {
+			// all bytes received, if the CS is good 
+			// queue the frame and restore the link state
+			if (checksum == 0) {
+				_genieEnqueueEvent(rx_data);
+				rxframe_count = 0;
+				// revert the link state to whatever it was before
+				// we started accumulating this frame
+				_geniePopLinkState();
+				return GENIE_EVENT_RXCHAR;
+			} else {
+				_genieError = ERROR_BAD_CS;
+				_handleError();
+			}	
+		}
+		rxframe_count++;
+		return GENIE_EVENT_RXCHAR;
+	}
 }
 
 /////////////////// _genieFatalError ///////////////////////
@@ -306,6 +375,7 @@ void _genieFlushSerialInput(void) {
 // Untested, will need work I'm sure.
 //
 void genieResync (void) {
+	
 	for (long timeout = millis() + RESYNC_PERIOD ; millis() < timeout;) {};
 
 	_genieFlushSerialInput();
@@ -321,8 +391,8 @@ void genieResync (void) {
 // help recover from errors.
 //
 void _handleError (void) {
-//	Serial2.write (_genieError);
-	if (_genieError == GENIE_NAK) genieResync();
+//	Serial2.write (_genieError + (1<<5));
+//	if (_genieError == GENIE_NAK) genieResync();
 }
 
 ////////////////////// _genieFlushEventQueue ////////////////////
@@ -393,7 +463,6 @@ bool _genieEnqueueEvent (uint8_t * data) {
 // course by genieDoEvents() and subsequently by the user's event 
 // handler.
 //
-
 bool genieReadObject (uint16_t object, uint16_t index) {
 
 	uint8_t checksum;
@@ -409,7 +478,7 @@ bool genieReadObject (uint16_t object, uint16_t index) {
 	_geniePutchar(index);          checksum  ^= index ;
 	_geniePutchar(checksum);
 
-	_genieSetLinkState(GENIE_LINK_IDLE);
+	_geniePushLinkState(GENIE_LINK_WF_RXREPORT);
 
 	return TRUE;
 }
@@ -421,13 +490,20 @@ bool genieReadObject (uint16_t object, uint16_t index) {
 //
 // Parms:	uint16_t newstate, a value to be written to the 
 //				link's _genieLinkState variable. Valid values are
-//				GENIE_LINK_IDLE		0
-//				GENIE_LINK_WFAN		1 // waiting for Ack or Nak
-//				GENIE_LINK_RXFRAME	2 // receiving a report frame
-//				GENIE_LINK_SHDN		3
+//		GENIE_LINK_IDLE			0
+//		GENIE_LINK_WFAN			1 // waiting for Ack or Nak
+//		GENIE_LINK_WF_RXREPORT	2 // waiting for a report frame
+//		GENIE_LINK_RXREPORT		3 // receiving a report frame
+//		GENIE_LINK_RXEVENT		4 // receiving an event frame
+//		GENIE_LINK_SHDN			5
 //
 void _genieSetLinkState (uint16_t newstate) {
+	
 	*_genieLinkState = newstate;
+
+	if (newstate == GENIE_LINK_RXREPORT || \
+		newstate == GENIE_LINK_RXEVENT)
+		rxframe_count = 0;	
 }
 
 /////////////////////// _genieGetLinkState //////////////////////
@@ -442,7 +518,6 @@ uint16_t _genieGetLinkState (void) {
 //
 // Write data to an object on the display
 //
-
 uint16_t genieWriteObject (uint16_t object, uint16_t index, uint16_t data)
 {
 	uint16_t msb, lsb ;
@@ -462,8 +537,8 @@ uint16_t genieWriteObject (uint16_t object, uint16_t index, uint16_t data)
 	_geniePutchar(lsb) ;             checksum ^= lsb;
 	_geniePutchar(checksum) ;
 
-	_genieSetLinkState(GENIE_LINK_WFAN);
-
+	_geniePushLinkState(GENIE_LINK_WFAN);
+	
 }
 
 /////////////////////// genieWriteContrast //////////////////////
@@ -483,7 +558,7 @@ void genieWriteContrast (uint16_t value) {
 	_geniePutchar(value) ;                checksum ^= value ;
 	_geniePutchar(checksum) ;
 
-	_genieSetLinkState(GENIE_LINK_WFAN);
+	_geniePushLinkState(GENIE_LINK_WFAN);
 
 }
 
@@ -511,7 +586,7 @@ static int _genieWriteStrX (uint16_t code, uint16_t index, char *string)
 	}
 	_geniePutchar(checksum) ;
 
-	_genieSetLinkState(GENIE_LINK_WFAN);
+	_geniePushLinkState(GENIE_LINK_WFAN);
 
 	return 0 ;
 }
@@ -694,9 +769,9 @@ void genieSetup (uint32_t baud) {
 //
 //	uint8_t port:	A port number/type from the genie_port_types enum, ie
 //					GENIE_SERIAL, standard serial port on all Arduinos
-//					GENIE_SERIAL_1, serial port 1 if availabel on the host platform
-//					GENIE_SERIAL_2, serial port 2 if availabel on the host platform
-//					GENIE_SERIAL_3, serial port 3 if availabel on the host platform
+//					GENIE_SERIAL_1, serial port 1 if available on the host platform
+//					GENIE_SERIAL_2, serial port 2 if available on the host platform
+//					GENIE_SERIAL_3, serial port 3 if available on the host platform
 //
 //	uint32_t baud:	The baud rate at which the Genie link will run
 //
@@ -718,7 +793,8 @@ uint16_t genieBegin (uint8_t port, uint32_t baud) {
 	_geniePutCharHandler = _geniePutCharFuncTable[port];
 	_genieGetCharHandler = _genieGetCharFuncTable[port];
 	(_geniePutCharHandler)(GENIE_NULL, baud);
-	_genieSetLinkState(GENIE_LINK_IDLE);
+	_geniePushLinkState(GENIE_LINK_IDLE);
+	
 	_genieFlushEventQueue();
 
 	return true;

@@ -1,6 +1,6 @@
-//////////////////////////// GenieArduino V4 /////////////////////////
+/////////////////////// GenieArduino 24/07/2013 ///////////////////////
 //
-//      Library to utilise the 4D Systems Genie interface to displays
+//      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
@@ -34,14 +34,14 @@
 
 #undef	GENIE_DEBUG
 
-#define	GENIE_VERSION	"GenieArduino 16-Jul-2013"
+#define	GENIE_VERSION	"GenieArduino 24-Jul-2013"
 
 // Genie commands & replys:
 
 #define	GENIE_ACK		0x06
 #define	GENIE_NAK		0x15
 
-#define TIMEOUT_PERIOD	100
+#define TIMEOUT_PERIOD	500
 #define RESYNC_PERIOD	100
 
 #define	GENIE_READ_OBJ			0
@@ -159,10 +159,16 @@ extern void		pulse (int pin);
 #define	ERROR_NODISPLAY		-7	// 249  0xF9
 #define ERROR_BAD_CS		-8	// 248  0xF8
 
-#define GENIE_LINK_IDLE		0
-#define GENIE_LINK_WFAN		1 // waiting for Ack or Nak
-#define GENIE_LINK_RXFRAME	2 // receiving a report frame
-#define GENIE_LINK_SHDN		3
+#define GENIE_LINK_IDLE			0
+#define GENIE_LINK_WFAN			1 // waiting for Ack or Nak
+#define GENIE_LINK_WF_RXREPORT	2 // waiting for a report frame
+#define GENIE_LINK_RXREPORT		3 // receiving a report frame
+#define GENIE_LINK_RXEVENT		4 // receiving an event frame
+#define GENIE_LINK_SHDN			5
+
+#define GENIE_EVENT_NONE	0
+#define GENIE_EVENT_RXCHAR	1
+
 
 //////////////////////////////////////////////////////////////////
 //

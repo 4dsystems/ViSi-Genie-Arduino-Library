@@ -1,4 +1,4 @@
-/////////////////////////// GenieArduino 24/07/2013 /////////////////////////
+/////////////////////////// GenieArduino 22/08/2013 /////////////////////////
 //
 //      Library to utilise the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
@@ -224,7 +224,7 @@ uint16_t genieDoEvents (void) {
 	// queued events call the user's handler function.
 	//
 	if (_genieError == ERROR_NOCHAR) {
-		if (_genieEventQueue.n_events > 0) (_genieUserHandler)();
+		if (_genieEventQueue.n_events > 0 && _genieUserHandler!= NULL) (_genieUserHandler)();
 		return GENIE_EVENT_NONE;
 	}
 	

@@ -1,4 +1,4 @@
-/////////////////////// GenieArduino 24/07/2013 ///////////////////////
+/////////////////////// GenieArduino 22/08/2013 ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
@@ -34,7 +34,7 @@
 
 #undef	GENIE_DEBUG
 
-#define	GENIE_VERSION	"GenieArduino 24-Jul-2013"
+#define	GENIE_VERSION	"GenieArduino 22-Aug-2013"
 
 // Genie commands & replys:
 

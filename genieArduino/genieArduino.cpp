@@ -1,9 +1,11 @@
-/////////////////////////// GenieArduino 22/08/2013 /////////////////////////
+/////////////////////////// GenieArduino 27/09/2013 /////////////////////////
 //
 //      Library to utilise the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
+//		Updated by
+//		4D Systems Engineering, September 2013, www.4dsystems.com.au
 //		Written by 
 //		Rob Gray (GRAYnomad), June 2013, www.robgray.com
 //      Based on code by

@@ -1,9 +1,11 @@
-/////////////////////// GenieArduino 22/08/2013 ///////////////////////
+/////////////////////// GenieArduino 27/09/2013 ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
+//		Updated by
+//		4D Systems Engineering, September 2013, www.4dsystems.com.au		
 //		Written by 
 //		Rob Gray (GRAYnomad), June 2013, www.robgray.com
 //      Based on code by
@@ -34,7 +36,7 @@
 
 #undef	GENIE_DEBUG
 
-#define	GENIE_VERSION	"GenieArduino 22-Aug-2013"
+#define	GENIE_VERSION	"GenieArduino 27-Sep-2013"
 
 // Genie commands & replys:
 
@@ -81,6 +83,16 @@
 #define	GENIE_OBJ_STATIC_TEXT	21
 #define	GENIE_OBJ_SOUND			22
 #define	GENIE_OBJ_TIMER			23
+#define	GENIE_OBJ_SPECTRUM		24
+#define	GENIE_OBJ_SCOPE			25
+#define	GENIE_OBJ_TANK			26
+#define	GENIE_OBJ_USERIMAGES	27
+#define	GENIE_OBJ_PINOUTPUT		28
+#define	GENIE_OBJ_PININPUT		29
+#define	GENIE_OBJ_4DBUTTON		30
+#define	GENIE_OBJ_ANIBUTTON		31
+#define	GENIE_OBJ_COLORPICKER	32
+#define	GENIE_OBJ_USERBUTTON	33
 
 // Structure to store replys returned from a display
 
@@ -199,7 +211,19 @@ extern void		pulse (int pin);
 #define SERIAL_1
 #endif
 
-#if defined(__SAM3X8E__) 
+#if defined(__SAM3X8E__) // Due
+#define SERIAL
+#define SERIAL_1
+#define SERIAL_2
+#define SERIAL_3
+#endif
+
+#if #defined (__32MX320F128H__) // For Chipkit Uno32 (UNTESTED)
+#define SERIAL
+#define SERIAL_1
+#endif
+
+#if #defined (__32MX795F512L__) // For Chipkit Max32 (UNTESTED)
 #define SERIAL
 #define SERIAL_1
 #define SERIAL_2

@@ -1,10 +1,11 @@
-/////////////////////// GenieArduino 27/09/2013 ///////////////////////
+/////////////////////// GenieArduino 09/01/2014 ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //		Updated by
+//		4D Systems Engineering, January 2014, www.4dsystems.com.au
 //		4D Systems Engineering, September 2013, www.4dsystems.com.au		
 //		Written by 
 //		Rob Gray (GRAYnomad), June 2013, www.robgray.com
@@ -36,7 +37,7 @@
 
 #undef	GENIE_DEBUG
 
-#define	GENIE_VERSION	"GenieArduino 27-Sep-2013"
+#define	GENIE_VERSION	"GenieArduino 09-Jan-2014"
 
 // Genie commands & replys:
 
@@ -218,16 +219,21 @@ extern void		pulse (int pin);
 #define SERIAL_3
 #endif
 
-#if #defined (__32MX320F128H__) // For Chipkit Uno32 (UNTESTED)
+#if defined(__32MX320F128H__) // For Chipkit Uno32 (UNTESTED)
 #define SERIAL
 #define SERIAL_1
 #endif
 
-#if #defined (__32MX795F512L__) // For Chipkit Max32 (UNTESTED)
+#if defined(__32MX795F512L__) // For Chipkit Max32 (UNTESTED)
 #define SERIAL
 #define SERIAL_1
 #define SERIAL_2
 #define SERIAL_3
+#endif
+
+#if defined(__linux__) // For Intel Galileo
+#define SERIAL
+#define SERIAL_1
 #endif
 
 typedef enum {

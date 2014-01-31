@@ -1,12 +1,15 @@
 #include <genieArduino.h>
 
-// Updated version of the genieArduino library and Demo
-// 4D Systems
 // This Demo communicates with a 4D Systems Display, configured with ViSi-Genie.
 // The display has a slider, a cool gauge, an LED Digits and a string box.
-// The program reads from the slider manually using Read Object as well as using the Reported Events
-// from the On-Changed event from the slider itself, set in the Workshop4 software.
-// Coolgauge is written to using Write Object, and the String is updated using the Write String command.
+// The program reads from the slider manually using Read Object as well as using the Reported Events - Normally do one or the other, however 
+// is shown with both to illustrate how to handle both message types. Reported Events originate from the On-Changed event from the slider itself, 
+// set in the Workshop4 software.
+// Coolgauge is written to using Write Object, and the String is updated using the Write String command, showing the version of the library.
+
+// As the slider changes, it sends its value to the Arduino (Arduino also polls its value using genieReadObject, as above), and the Arduino then
+// tells the LED Digit to update its value using genieWriteObject. So the Slider message goes via the Arduino to the LED Digit.
+// Coolgauge is updated via simple timer in the Arduino code, and updates the display with its value.
 
 void setup() 
 { 
@@ -19,6 +22,8 @@ void setup()
   genieAttachEventHandler(myGenieEventHandler);
 
   //Reset the Display (change D4 to D2 if you have original 4D Arduino Adaptor)
+  //If NOT using a 4D Arduino Adaptor, digitalWrites must be reversed as Display Reset is Active Low, and
+  //the 4D Arduino Adaptors invert this signal so must be Active High.
   pinMode(4, OUTPUT);  // Set D4 on Arduino to Output (4D Arduino Adaptor V2 - Display Reset)
   digitalWrite(4, 1);  // Reset the Display via D4
   delay(100);
@@ -53,7 +58,7 @@ void loop()
     // Do a manual read from the Slider0 object
     genieReadObject(GENIE_OBJ_SLIDER, 0x00);
 
-    waitPeriod = millis() + 100;
+    waitPeriod = millis() + 50; // rerun this code to update Cool Gauge and Slider in another 50ms time. 
   }
 }
 
@@ -104,7 +109,7 @@ void myGenieEventHandler(void)
     {
       if (Event.reportObject.index == 0)                              // If Slider0
       {
-        slider_val = (Event.reportObject.data_msb << 8) + Event.reportObject.data_lsb;  // Slider0 data into the slider_val setpoint  
+        slider_val = genieGetEventData(&Event);  // Receive the event data from the Slider0 
         genieWriteObject(GENIE_OBJ_LED_DIGITS, 0x00, slider_val);     // Write Slider0 value to to LED Digits 0
       }
     }
@@ -117,7 +122,7 @@ void myGenieEventHandler(void)
     {
       if (Event.reportObject.index == 0)                              // If Slider0
       {
-        slider_val = (Event.reportObject.data_msb << 8) + Event.reportObject.data_lsb;  // Slider0 data into the slider_val setpoint  
+        slider_val = genieGetEventData(&Event);  // Receive the event data from the Slider0 
         genieWriteObject(GENIE_OBJ_LED_DIGITS, 0x00, slider_val);     // Write Slider0 value to to LED Digits 0
       }
     }
@@ -128,6 +133,6 @@ void myGenieEventHandler(void)
   //Event.reportObject.cmd is used to determine the command of that event, such as an reported event
   //Event.reportObject.object is used to determine the object type, such as a Slider
   //Event.reportObject.index is used to determine the index of the object, such as Slider0
-  //Event.reportObject.data_msb and _lsb are used to save the data to a variable. They are in bytes, need to be combined to save as integer.
+  //genieGetEventData(&Event) us used to save the data from the Event, into a variable. 
 }
 

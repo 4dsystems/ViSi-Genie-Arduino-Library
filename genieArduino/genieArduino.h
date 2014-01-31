@@ -1,18 +1,19 @@
-/////////////////////// GenieArduino 09/01/2014 ///////////////////////
+/////////////////////// GenieArduino 31/01/2014 ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
-//		Updated by
+//		Improvements/Updates by
+//		Clinton Keith, January 2014, www.clintonkeith.com		
 //		4D Systems Engineering, January 2014, www.4dsystems.com.au
-//		4D Systems Engineering, September 2013, www.4dsystems.com.au		
-//		Written by 
+//		4D Systems Engineering, September 2013, www.4dsystems.com.au
+//		Written by
 //		Rob Gray (GRAYnomad), June 2013, www.robgray.com
 //      Based on code by
 //		Gordon Henderson, February 2013, <projects@drogon.net>
 //
-//      Copyright (c) 2012-2013 4D Systems PTY Ltd, Sydney, Australia
+//      Copyright (c) 2012-2013 4D Systems Pty Ltd, Sydney, Australia
 /*********************************************************************
  * This file is part of genieArduino:
  *    genieArduino is free software: you can redistribute it and/or modify
@@ -29,6 +30,13 @@
  *    License along with genieArduino.
  *    If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
+#if defined(ARDUINO) && ARDUINO >= 100
+#include "Arduino.h"
+#else
+#include "WProgram.h"
+#endif
+
+#include <inttypes.h>
 
 #include <stdint.h>
 
@@ -37,14 +45,14 @@
 
 #undef	GENIE_DEBUG
 
-#define	GENIE_VERSION	"GenieArduino 09-Jan-2014"
+#define	GENIE_VERSION	"GenieArduino 31-Jan-2014"
 
 // Genie commands & replys:
 
 #define	GENIE_ACK		0x06
 #define	GENIE_NAK		0x15
 
-#define TIMEOUT_PERIOD	500
+#define TIMEOUT_PERIOD	1000
 #define RESYNC_PERIOD	100
 
 #define	GENIE_READ_OBJ			0
@@ -106,7 +114,7 @@ struct genieFrameReportObj {
 	uint8_t		data_msb;
 	uint8_t		data_lsb;
 };
- 
+
 /////////////////////////////////////////////////////////////////////
 // The Genie frame definition
 //
@@ -134,28 +142,39 @@ struct genieEventQueueStruct {
 	uint8_t		n_events;
 };
 
-typedef void		(*geniePutCharFuncPtr)		(uint8_t c, uint32_t baud);
-typedef uint16_t	(*genieGetCharFuncPtr)		(void);
+typedef enum {
+    GENIE_NULL,
+    GENIE_SERIAL,
+    GENIE_SERIAL_1,
+    GENIE_SERIAL_2,
+    GENIE_SERIAL_3
+} genie_port_types;
+
+
+//typedef void		(*geniePutCharFuncPtr)		(uint8_t c, uint32_t baud);
+//typedef uint16_t	(*genieGetCharFuncPtr)		(void);
 typedef void		(*genieUserEventHandlerPtr) (void);
 
 /////////////////////////////////////////////////////////////////////
 // User API functions
 // These function prototypes are the user API to the library
 //
-extern void		genieSetup				(uint32_t baud);
-extern uint16_t genieBegin				(uint8_t port, uint32_t baud);
-extern bool		genieReadObject			(uint16_t object, uint16_t index);
-extern uint16_t	genieWriteObject		(uint16_t object, uint16_t index, uint16_t data);
-extern void		genieWriteContrast		(uint16_t value);
-extern uint16_t	genieWriteStr			(uint16_t index, char *string);
-extern uint16_t	genieWriteStrU			(uint16_t index, char *string);
-extern bool		genieEventIs			(genieFrame * e, uint8_t cmd, uint8_t object, uint8_t index);
-extern uint16_t genieGetEventData		(genieFrame * e); 
-extern uint16_t	genieDoEvents			(void);
-extern void		genieAttachEventHandler (genieUserEventHandlerPtr userHandler);
-extern bool		genieDequeueEvent		(genieFrame * buff);
+extern void			genieSetup				(uint32_t baud);
+extern void     	genieBegin				(Stream &serial);
+extern uint16_t 	genieBegin				(uint8_t port, uint32_t baud);
+extern bool			genieReadObject			(uint16_t object, uint16_t index);
+extern uint16_t		genieWriteObject		(uint16_t object, uint16_t index, uint16_t data);
+extern void			genieWriteContrast		(uint16_t value);
+extern uint16_t		genieWriteStr			(uint16_t index, char *string);
+extern uint16_t		genieWriteStrU			(uint16_t index, uint16_t *string);
+extern bool			genieEventIs			(genieFrame * e, uint8_t cmd, uint8_t object, uint8_t index);
+extern uint16_t 	genieGetEventData		(genieFrame * e);
+extern uint16_t		genieDoEvents			(void);
+extern void			genieAttachEventHandler (genieUserEventHandlerPtr userHandler);
+extern bool			genieDequeueEvent		(genieFrame * buff);
 
-extern void		pulse (int pin);
+extern void			pulse 					(int pin);
+extern void     	assignDebugPort			(Stream &port);
 
 #ifndef	TRUE
 #define	TRUE	(1==1)
@@ -181,67 +200,5 @@ extern void		pulse (int pin);
 
 #define GENIE_EVENT_NONE	0
 #define GENIE_EVENT_RXCHAR	1
-
-
-//////////////////////////////////////////////////////////////////
-//
-// Definitions to exclude code for serial ports that don't exist
-// on a given platform. 
-//
-// Find out the right constants for a Mega328, and processors 
-// on the Uno, Due etc
-//
-
-#if defined(__AVR_ATmega328P__)  
-#define SERIAL
-#endif
-
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#define SERIAL
-#define SERIAL_1
-#define SERIAL_2
-#define SERIAL_3
-#endif
-
-#if defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega644P__)
-#define SERIAL
-#define SERIAL_1
-#endif
-
-#if defined(__AVR_ATmega32U4__) // Leonardo
-#define SERIAL_1
-#endif
-
-#if defined(__SAM3X8E__) // Due
-#define SERIAL
-#define SERIAL_1
-#define SERIAL_2
-#define SERIAL_3
-#endif
-
-#if defined(__32MX320F128H__) // For Chipkit Uno32 (UNTESTED)
-#define SERIAL
-#define SERIAL_1
-#endif
-
-#if defined(__32MX795F512L__) // For Chipkit Max32 (UNTESTED)
-#define SERIAL
-#define SERIAL_1
-#define SERIAL_2
-#define SERIAL_3
-#endif
-
-#if defined(__linux__) // For Intel Galileo
-#define SERIAL
-#define SERIAL_1
-#endif
-
-typedef enum {
-  GENIE_NULL,
-  GENIE_SERIAL,
-  GENIE_SERIAL_1,
-  GENIE_SERIAL_2,
-  GENIE_SERIAL_3
-} genie_port_types;
 
 #endif

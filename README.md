@@ -1,9 +1,11 @@
 ![image](http://www.4dsystems.com.au/imagenes/header.png)
 
-ViSi-Genie-Arduino-Library - NEW VERSION - Updated 31-Jan-2014
+ViSi-Genie-Arduino-Library - NEW VERSION - Updated 31-Mar-2014
 ==============================================================
 
-Arduino Library for 4D Systems ViSi-Genie Environment 
+Arduino Library for 4D Systems ViSi-Genie Environment
+
+Note: this library has changed since the last release - syntax is different. please refer to the demo supplied with this library 
 
 ## Information
 
@@ -26,7 +28,7 @@ Inside the library is an example sketch, to assist with getting started using th
 
 ## Tested with
 
-This library has been tested on the Duemilanove, Uno, Mega 1280, Mega 2560, Due and new Intel Galileo. Any problems discovered with this library, please contact technical support so fixes can be put in place, or seek support from our forum.
+This library has been tested on the Duemilanove, Uno, Mega 1280, Mega 2560, Leonardo, Chipkit Max32, Due and new Intel Galileo. Any problems discovered with this library, please contact technical support so fixes can be put in place, or seek support from our forum.
 
 ## Compatible 4D Systems Display Modules
 

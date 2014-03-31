@@ -5,7 +5,7 @@ Depends
 end
 Options
     Genie
-    Speed                        115200
+    Speed                        200000
     Checksum                     No
     ResponseSize                 1
     Multidrop                    No
@@ -120,7 +120,7 @@ Coolgauge
     ValueFont.Style              []
     ValueFormat                  0
     Visible                      Yes
-    Width                        189
+    Width                        192
     OnChanged                    ''
 end
 GSlider
@@ -145,9 +145,9 @@ GSlider
     BorderColor                  clBtnFace
     BorderWidth                  1
     Color                        BLACK
-    Height                       151
-    Left                         20
-    Maxvalue                     100
+    Height                       139
+    Left                         0
+    Maxvalue                     99
     Minvalue                     0
     Orientation                  Vertical
     Palette.High                 clLime
@@ -175,11 +175,62 @@ Strings
     Font.Size                    12
     Font.Strikethrough           No
     Font.Underline               No
-    Left                         116
+    Left                         120
     Strings                      ''
-    StringsStyle                 Message
+    StringsStyle                 ''
     Top                          200
     Visible                      Yes
-    Width                        200
+    Width                        199
     OnChanged                    ''
+end
+UserLed
+    Name                         Userled0
+    Active                       Yes
+    Bevel.BorderColor            clBtnFace
+    Bevel.BorderWidth            0
+    Bevel.InnerColor             clBtnFace
+    Bevel.InnerHighlight         clLime
+    Bevel.InnerOutline           None
+    Bevel.InnerShadow            0x005100
+    Bevel.InnerSpace             1
+    Bevel.InnerStyle             None
+    Bevel.Innerwidth             1
+    Bevel.OuterColor             clBtnFace
+    Bevel.OuterHighlight         clBtnHighlight
+    Bevel.OuterOutline           Outer
+    Bevel.OuterShadow            clBtnShadow
+    Bevel.OuterSpace             0
+    Bevel.OuterStyle             Raised
+    Bevel.Outerwidth             1
+    Bevel.Visible                Yes
+    Height                       27
+    Left                         72
+    OutlineColor                 BLACK
+    OutlineWidth                 0
+    PaletteEx.High1              0x14EC3F
+    PaletteEx.High2              0x377B56
+    PaletteEx.Low1               0x000051
+    PaletteEx.Low2               BLACK
+    Top                          204
+    Visible                      Yes
+    Width                        43
+    OnChanged                    ''
+end
+StaticText
+    Name                         Statictext0
+    AutoSize                     Yes
+    Caption                      UserLED
+    Color                        BLACK
+    Font.Color                   WHITE
+    Font.Effects                 []
+    Font.Name                    Tahoma
+    Font.Size                    9
+    Font.Style                   []
+    Height                       14
+    Left                         72
+    Top                          188
+    Transparent                  Yes
+    Visible                      Yes
+    Width                        45
+    WordWrap                     Yes
 end

@@ -1,10 +1,11 @@
-/////////////////////// GenieArduino 31/01/2014 ///////////////////////
+/////////////////////// GenieArduino 31/03/2014 ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //		Improvements/Updates by
+//      Clinton Keith, March 2014, www.clintonkeith.com
 //		Clinton Keith, January 2014, www.clintonkeith.com		
 //		4D Systems Engineering, January 2014, www.4dsystems.com.au
 //		4D Systems Engineering, September 2013, www.4dsystems.com.au
@@ -45,7 +46,7 @@
 
 #undef	GENIE_DEBUG
 
-#define	GENIE_VERSION	"GenieArduino 31-Jan-2014"
+#define	GENIE_VERSION	"GenieArduino 31-Mar-2014"
 
 // Genie commands & replys:
 
@@ -107,7 +108,7 @@
 
 #define		GENIE_FRAME_SIZE	6
 
-struct genieFrameReportObj {
+struct FrameReportObj {
 	uint8_t		cmd;
 	uint8_t		object;
 	uint8_t		index;
@@ -119,7 +120,7 @@ struct genieFrameReportObj {
 // The Genie frame definition
 //
 // The union allows the data to be referenced as an array of uint8_t
-// or a structure of type genieFrameReportObj, eg
+// or a structure of type FrameReportObj, eg
 //
 //	genieFrame f;
 //	f.bytes[4];
@@ -128,53 +129,101 @@ struct genieFrameReportObj {
 //	both methods get the same byte
 //
 union genieFrame {
-	uint8_t				bytes[GENIE_FRAME_SIZE];
-	genieFrameReportObj	reportObject;
+	uint8_t			bytes[GENIE_FRAME_SIZE];
+	FrameReportObj	reportObject;
 };
 
 #define	MAX_GENIE_EVENTS	16	// MUST be a power of 2
 #define	MAX_GENIE_FATALS	10
 
-struct genieEventQueueStruct {
+struct EventQueueStruct {
 	genieFrame	frames[MAX_GENIE_EVENTS];
 	uint8_t		rd_index;
 	uint8_t		wr_index;
 	uint8_t		n_events;
 };
 
-typedef enum {
-    GENIE_NULL,
-    GENIE_SERIAL,
-    GENIE_SERIAL_1,
-    GENIE_SERIAL_2,
-    GENIE_SERIAL_3
-} genie_port_types;
-
-
-//typedef void		(*geniePutCharFuncPtr)		(uint8_t c, uint32_t baud);
-//typedef uint16_t	(*genieGetCharFuncPtr)		(void);
-typedef void		(*genieUserEventHandlerPtr) (void);
+typedef void		(*UserEventHandlerPtr) (void);
 
 /////////////////////////////////////////////////////////////////////
 // User API functions
 // These function prototypes are the user API to the library
 //
-extern void			genieSetup				(uint32_t baud);
-extern void     	genieBegin				(Stream &serial);
-extern uint16_t 	genieBegin				(uint8_t port, uint32_t baud);
-extern bool			genieReadObject			(uint16_t object, uint16_t index);
-extern uint16_t		genieWriteObject		(uint16_t object, uint16_t index, uint16_t data);
-extern void			genieWriteContrast		(uint16_t value);
-extern uint16_t		genieWriteStr			(uint16_t index, char *string);
-extern uint16_t		genieWriteStrU			(uint16_t index, uint16_t *string);
-extern bool			genieEventIs			(genieFrame * e, uint8_t cmd, uint8_t object, uint8_t index);
-extern uint16_t 	genieGetEventData		(genieFrame * e);
-extern uint16_t		genieDoEvents			(void);
-extern void			genieAttachEventHandler (genieUserEventHandlerPtr userHandler);
-extern bool			genieDequeueEvent		(genieFrame * buff);
+class Genie { 
 
-extern void			pulse 					(int pin);
-extern void     	assignDebugPort			(Stream &port);
+public:
+				Genie();
+	void     	Begin				(Stream &serial);
+	bool		ReadObject			(uint16_t object, uint16_t index);
+	uint16_t	WriteObject		    (uint16_t object, uint16_t index, uint16_t data);
+	void		WriteContrast		(uint16_t value);
+	uint16_t	WriteStr			(uint16_t index, char *string);
+	uint16_t	WriteStrU			(uint16_t index, uint16_t *string);
+	bool		EventIs			    (genieFrame * e, uint8_t cmd, uint8_t object, uint8_t index);
+	uint16_t 	GetEventData		(genieFrame * e);
+	bool 		DequeueEvent		(genieFrame * buff);
+	uint16_t	DoEvents			(void);
+	void		AttachEventHandler  (UserEventHandlerPtr userHandler);
+	void		pulse 				(int pin);
+	void     	assignDebugPort		(Stream &port);
+
+private:
+	void		FlushEventQueue		(void);
+	void		handleError			(void);
+	void		SetLinkState		(uint16_t newstate);
+	uint16_t	GetLinkState		(void);
+	bool		EnqueueEvent		(uint8_t * data);
+	uint8_t		Getchar				(void);
+	uint16_t    GetcharSerial    	(void);	
+	void 		WaitForIdle 		(void);
+	void 		PushLinkState 		(uint8_t newstate);
+	void 		PopLinkState 		(void);
+	void 		FatalError			(void);
+	void 		FlushSerialInput	(void);
+	void 		Resync 				(void);
+
+
+	//////////////////////////////////////////////////////////////
+	// A structure to hold up to MAX_GENIE_EVENTS events receive
+	// from the display
+	//
+	EventQueueStruct EventQueue;
+
+	//////////////////////////////////////////////////////////////
+	// Simple 5-deep stack for the link state, this allows
+	// DoEvents() to save the current state, receive a frame,
+	// then restore the state
+	//
+	uint8_t LinkStates[5];
+	//
+	// Stack pointer
+	//
+	uint8_t *LinkState;
+
+	//////////////////////////////////////////////////////////////
+	// Number of mS the GetChar() function will wait before
+	// giving up on the display
+	int Timeout;
+
+	//////////////////////////////////////////////////////////////
+	// Number of times we have had a timeout
+	int Timeouts;
+
+	//////////////////////////////////////////////////////////////
+	// Global error variable
+	int Error;
+
+
+	uint8_t	rxframe_count;
+
+	//////////////////////////////////////////////////////////////
+	// Number of fatal errors encountered
+	int FatalErrors;
+
+	Stream* deviceSerial;
+	Stream* debugSerial;
+
+};
 
 #ifndef	TRUE
 #define	TRUE	(1==1)

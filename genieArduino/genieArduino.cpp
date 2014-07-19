@@ -1,4 +1,4 @@
-/////////////////////////// GenieArduino 19/07/2014 /////////////////////////
+/////////////////////////// GenieArduino 20/07/2014 /////////////////////////
 //
 //      Library to utilise the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
@@ -47,12 +47,11 @@ int freeRam () {
     return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
 }
 
-//////////////////////////////////////////////////////////////
-// Pointer to the user's event handler function
-//
-UserEventHandlerPtr UserHandler = NULL;
-
-Genie::Genie(){
+Genie::Genie()
+{
+	// Pointer to the user's event handler function
+	UserEventHandlerPtr UserHandler = NULL;
+	
 	debugSerial = NULL; 
 	LinkStates[5] = GENIE_LINK_IDLE;
 	LinkState = &LinkStates[0];

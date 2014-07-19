@@ -1,11 +1,11 @@
 ![image](http://www.4dsystems.com.au/imagenes/header.png)
 
-ViSi-Genie-Arduino-Library - NEW VERSION - Updated 31-Mar-2014
+ViSi-Genie-Arduino-Library - NEW VERSION - Updated 20-JULY-2014
 ==============================================================
 
 Arduino Library for 4D Systems ViSi-Genie Environment
 
-Note: this library has changed since the last release - syntax is different. please refer to the demo supplied with this library 
+This library adds support for 2+ displays connected to a single Arduino, and adds a new Demo to illustrate how that is achieved
 
 ## Information
 
@@ -24,7 +24,7 @@ Open the ViSi-Genie project using Workshop4 and download to your display, connec
 
 ## Example Sketch
 
-Inside the library is an example sketch, to assist with getting started using this library. Inside is also a ViSi-Genie Workshop4 project, which can be used on a range of 4D Systems displays (designed on a uLCD-32PTU however can be changed via Workshop4 menu). It illustrates how to use some of the commands in the library include Read Object, Write Object, Reported Messages, Write Contrast and Write String.
+Inside the library are 2 example sketches, to assist with getting started using this library. Inside is also a ViSi-Genie Workshop4 project, which can be used on a range of 4D Systems displays (designed on a uLCD-32PTU however can be changed via Workshop4 menu). It illustrates how to use some of the commands in the library include Read Object, Write Object, Reported Messages, Write Contrast and Write String.
 
 ## Tested with
 

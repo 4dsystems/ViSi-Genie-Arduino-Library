@@ -1,4 +1,4 @@
-/////////////////////// GenieArduino 19/07/2014 ///////////////////////
+/////////////////////// GenieArduino 20/07/2014 ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
@@ -47,7 +47,7 @@
 
 #undef	GENIE_DEBUG
 
-#define	GENIE_VERSION	"GenieArduino 19-JUL-2014"
+#define	GENIE_VERSION	"GenieArduino 20-JUL-2014"
 
 // Genie commands & replys:
 
@@ -182,8 +182,7 @@ private:
 	void 		FatalError			(void);
 	void 		FlushSerialInput	(void);
 	void 		Resync 				(void);
-
-
+	
 	//////////////////////////////////////////////////////////////
 	// A structure to hold up to MAX_GENIE_EVENTS events receive
 	// from the display
@@ -223,6 +222,8 @@ private:
 
 	Stream* deviceSerial;
 	Stream* debugSerial;
+	
+	UserEventHandlerPtr UserHandler;
 
 };
 

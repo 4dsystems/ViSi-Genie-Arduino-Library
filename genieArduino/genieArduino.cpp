@@ -1,10 +1,11 @@
-/////////////////////////// GenieArduino 31/03/2014 /////////////////////////
+/////////////////////////// GenieArduino 19/07/2014 /////////////////////////
 //
 //      Library to utilise the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //		Improvements/Updates by
+//		4D Systems Engineering, July 2014, www.4dsystems.com.au
 //      Clinton Keith, March 2014, www.clintonkeith.com
 //		Clinton Keith, January 2014, www.clintonkeith.com		
 //		4D Systems Engineering, January 2014, www.4dsystems.com.au
@@ -439,7 +440,8 @@ bool Genie::ReadObject (uint16_t object, uint16_t index) {
     
 	uint8_t checksum;
     
-	FlushEventQueue();	// Discard any pending reply frames
+	// Discard any pending reply frames
+	//FlushEventQueue();	// Removed due to preventing more than 2 readObjects being queued
     
 	WaitForIdle();
     
@@ -522,7 +524,7 @@ uint16_t Genie::WriteObject (uint16_t object, uint16_t index, uint16_t data)
 //
 // Parms:	uint8_t value: The required contrast setting, only
 //		values from 0 to 15 are valid. 0 or 1 for most displays
-//      and 0 to 15 for the uLCD-43
+//      and 0 to 15 for the uLCD-43, uLCD-70, uLCD-35
 //
 void Genie::WriteContrast (uint16_t value) {
 	unsigned int checksum ;

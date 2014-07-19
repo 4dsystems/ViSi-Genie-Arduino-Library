@@ -1,6 +1,6 @@
 #include <genieArduino.h>
 
-// This Demo communicates with a 4D Systems Display, configured with ViSi-Genie.
+// This Demo communicates with a 4D Systems Display, configured with ViSi-Genie, utilising the Genie Arduino Library - https://github.com/4dsystems/ViSi-Genie-Arduino-Library.
 // The display has a slider, a cool gauge, an LED Digits, a string box and a User LED.
 // The program receives messages from the Slider0 object using the Reported Events. This is triggered each time the Slider changes on the display, and an event
 // is genereated and sent automatically. Reported Events originate from the On-Changed event from the slider itself, set in the Workshop4 software.
@@ -14,21 +14,29 @@
 
 // This demo illustrates how to use genie.ReadObject, genie.WriteObject, Reported Messages (Events), genie.WriteStr, genie.WriteContrast, plus supporting functions.
 
+// Application Notes on the 4D Systems Website that are useful to understand this library are found: http://www.4dsystems.com.au/appnotes 
+// Good App Notes to read are: 
+// 4D-AN-P4017 - Connecting a 4D Display to an Arduino Host - http://www.4dsystems.com.au/downloads/Application-Notes/4D-AN-P4017_R_1_0.zip
+// 4D-AN-P4018 - Writing to Genie Objects Using an Arduino Host - http://www.4dsystems.com.au/downloads/Application-Notes/4D-AN-P4018_R_1_0.zip 
+// 4D-AN-P4019 - A Simple Digital Voltmeter Application using an Arduino Host - http://www.4dsystems.com.au/downloads/Application-Notes/4D-AN-P4019_R_1_0.zip
+// 4D-AN-P4025 - Arduino Danger Shield for Sparkfun Danger Shield - http://www.4dsystems.com.au/downloads/Application-Notes/4D-AN-P4025_R_1_0.zip 
+
 Genie genie;
 #define RESETLINE 4  // Change this if you are not using an Arduino Adaptor Shield Version 2 (see code below)
 void setup()
 {
-  // NOTE, the genieBegin function (e.g. genieBegin(GENIE_SERIAL_0, 115200)) no longer exists.  Use a Serial Begin and serial port of your choise in
+  // NOTE, the genieBegin function (e.g. genieBegin(GENIE_SERIAL_0, 115200)) no longer exists.  Use a Serial Begin and serial port of your choice in
   // your code and use the genie.Begin function to send it to the Genie library (see this example below)
-
+  // 200K Baud is good for most Arduinos. Galileo should use 115200.  
   Serial.begin(200000);  // Serial0 @ 200000 (200K) Baud
   genie.Begin(Serial);   // Use Serial0 for talking to the Genie Library, and to the 4D Systems display
 
   genie.AttachEventHandler(myGenieEventHandler); // Attach the user function Event Handler for processing events
 
   // Reset the Display (change D4 to D2 if you have original 4D Arduino Adaptor)
+  // THIS IS IMPORTANT AND CAN PREVENT OUT OF SYNC ISSUES, SLOW SPEED RESPONSE ETC
   // If NOT using a 4D Arduino Adaptor, digitalWrites must be reversed as Display Reset is Active Low, and
-  // the 4D Arduino Adaptors invert this signal so must be Active High.
+  // the 4D Arduino Adaptors invert this signal so must be Active High.  
   pinMode(RESETLINE, OUTPUT);  // Set D4 on Arduino to Output (4D Arduino Adaptor V2 - Display Reset)
   digitalWrite(RESETLINE, 1);  // Reset the Display via D4
   delay(100);
@@ -37,7 +45,8 @@ void setup()
   delay (3500); //let the display start up after the reset (This is important)
 
   //Turn the Display on (Contrast) - (Not needed but illustrates how)
-  genie.WriteContrast(1); // 1 = Display ON, 0 = Display OFF
+  genie.WriteContrast(1); // 1 = Display ON, 0 = Display OFF.
+  //For uLCD43, uLCD-70DT, and uLCD-35DT, use 0-15 for Brightness Control, where 0 = Display OFF, though to 15 = Max Brightness ON.
 
   //Write a string to the Display to show the version of the library used
   genie.WriteStr(0, GENIE_VERSION);
@@ -49,7 +58,7 @@ void loop()
   static int gaugeAddVal = 1;
   static int gaugeVal = 50;
 
-  genie.DoEvents();
+  genie.DoEvents(); // This calls the library each loop to process the queued responses from the display
 
   if (millis() >= waitPeriod)
   {
@@ -75,12 +84,12 @@ void loop()
 //		The link is in an IDLE state, and
 //		There is an event to handle
 //
-// The event can be either a REPORT_EVENT frame sent asynchrounously
+// The event can be either a REPORT_EVENT frame sent asynchronously
 // from the display or a REPORT_OBJ frame sent by the display in
 // response to a READ_OBJ request.
 //
 
-/*COMPACT VERSION HERE, LONGHAND VERSION BELOW WHICH MAY MAKE MORE SENSE
+/* COMPACT VERSION HERE, LONGHAND VERSION BELOW WHICH MAY MAKE MORE SENSE
 void myGenieEventHandler(void)
 {
   genieFrame Event;
@@ -96,9 +105,9 @@ void myGenieEventHandler(void)
     slider_val = genieGetEventData(&Event);  // Receive the event data from the Slider0
     genieWriteObject(GENIE_OBJ_LED_DIGITS, 0x00, slider_val);     // Write Slider0 value to to LED Digits 0
   }
-}*/
+} */
 
-//LONG HAND VERSION, MAYBE MORE VISIBLE AND MORE LIKE VERSION 1 OF THE LIBRARY
+// LONG HAND VERSION, MAYBE MORE VISIBLE AND MORE LIKE VERSION 1 OF THE LIBRARY
 void myGenieEventHandler(void)
 {
   genieFrame Event;

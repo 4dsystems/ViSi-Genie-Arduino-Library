@@ -34,3 +34,8 @@ This library has been tested on the Duemilanove, Uno, Mega 1280, Mega 2560, Leon
 
 This library will work with all 4D Systems Modules which are capable of using the ViSi-Genie environment. This is therefore all Picaso and Diablo16 Display Modules.
 The demo included with this library was made for the uLCD-32PTU however can easily be adapted to other size displays.
+
+## Questions/Issues?
+
+Please sign up for our Forum and ask a question there, or submit a Tech Support Ticket from our website.
+http://forum.4dsystems.com.au or http://www.4dsystems.com.au/support

@@ -21,10 +21,12 @@
 
 // Application Notes on the 4D Systems Website that are useful to understand this library are found: http://www.4dsystems.com.au/appnotes 
 // Good App Notes to read are: 
-// 4D-AN-P4017 - Connecting a 4D Display to an Arduino Host - http://www.4dsystems.com.au/downloads/Application-Notes/4D-AN-P4017_R_1_0.zip
-// 4D-AN-P4018 - Writing to Genie Objects Using an Arduino Host - http://www.4dsystems.com.au/downloads/Application-Notes/4D-AN-P4018_R_1_0.zip 
-// 4D-AN-P4019 - A Simple Digital Voltmeter Application using an Arduino Host - http://www.4dsystems.com.au/downloads/Application-Notes/4D-AN-P4019_R_1_0.zip
-// 4D-AN-P4025 - Arduino Danger Shield for Sparkfun Danger Shield - http://www.4dsystems.com.au/downloads/Application-Notes/4D-AN-P4025_R_1_0.zip 
+// ViSi-Genie Connecting a 4D Display to an Arduino Host - http://www.4dsystems.com.au/appnote/4D-AN-00017/
+// ViSi-Genie Writing to Genie Objects Using an Arduino Host - http://www.4dsystems.com.au/appnote/4D-AN-00018/
+// ViSi-Genie A Simple Digital Voltmeter Application using an Arduino Host - http://www.4dsystems.com.au/appnote/4D-AN-00019/
+// ViSi-Genie Connection to an Arduino Host with RGB LED Control - http://www.4dsystems.com.au/appnote/4D-AN-00010/
+// ViSi-Genie Displaying Temperature values from an Arduino Host - http://www.4dsystems.com.au/appnote/4D-AN-00015/
+// ViSi-Genie Arduino Danger Shield - http://www.4dsystems.com.au/appnote/4D-AN-00025/
 
 Genie display1; // Genie Display 1
 Genie display2; // Genie Display 2

@@ -1,15 +1,16 @@
 ![image](http://www.4dsystems.com.au/imagenes/header.png)
 
-ViSi-Genie-Arduino-Library - NEW VERSION - Updated 20-JULY-2014
+ViSi-Genie-Arduino-Library - NEW VERSION - Updated 18-MAY-2015
 ==============================================================
 
-Arduino Library for 4D Systems ViSi-Genie Environment
+Arduino Library for 4D Systems ViSi-Genie Environment, and NEW instructions made available with Workshop4 PRO
 
 This library adds support for 2+ displays connected to a single Arduino, and adds a new Demo to illustrate how that is achieved
 
 ## Information
 
 This library provides high level functions for the Arduino, to ease communication with 4D Systems modules when using the module configured with ViSi-Genie.
+Workshop4 PRO adds additional features to ViSi-Genie, allowing the User to write 4DGL code which can be executed at will from ViSi-Genie, enabling many advanced features not previously possible.
 Please refer to the 4D Systems website, namingly the Workshop 4 Product Page, for documentation regarding Workshop 4, and its environments.
 
 ## Installation

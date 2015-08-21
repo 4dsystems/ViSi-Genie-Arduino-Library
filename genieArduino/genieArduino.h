@@ -1,10 +1,11 @@
-/////////////////////// GenieArduino 18/05/2015 ///////////////////////
+/////////////////////// GenieArduino 21/08/2015 ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //      Improvements/Updates by
+//        4D Systems Engineering, August 2015, www.4dsystems.com.au
 //        4D Systems Engineering, May 2015, www.4dsystems.com.au
 //        Matt Jenkins, March 2015, www.majenko.com
 //        Clinton Keith, January 2015, www.clintonkeith.com
@@ -50,7 +51,7 @@
 
 #undef GENIE_DEBUG
 
-#define GENIE_VERSION    "GenieArduino 18-05-2015"
+#define GENIE_VERSION    "GenieArduino 21-08-2015"
 
 // Genie commands & replys:
 
@@ -175,6 +176,13 @@ public:
     uint16_t    WriteObject         (uint16_t object, uint16_t index, uint16_t data);
     void        WriteContrast       (uint16_t value);
     uint16_t    WriteStr            (uint16_t index, char *string);
+	uint16_t	WriteStr			(uint16_t index, long n) ;
+	uint16_t	WriteStr			(uint16_t index, long n, int base) ;
+	uint16_t	WriteStr			(uint16_t index, int n) ;
+	uint16_t	WriteStr			(uint16_t index, int n, int base) ;
+	uint16_t	WriteStr			(uint16_t index, const __FlashStringHelper *ifsh);
+	uint16_t	WriteStr			(uint16_t index, double n, int digits);
+	uint16_t	WriteStr			(uint16_t index, double n);	
     uint16_t    WriteStrU           (uint16_t index, uint16_t *string);
     bool        EventIs             (genieFrame * e, uint8_t cmd, uint8_t object, uint8_t index);
     uint16_t    GetEventData        (genieFrame * e);
@@ -208,6 +216,7 @@ private:
     void        FatalError          (void);
     void        FlushSerialInput    (void);
     void        Resync              (void);
+	
 
     //////////////////////////////////////////////////////////////
     // A structure to hold up to MAX_GENIE_EVENTS events receive

@@ -1,11 +1,13 @@
 ![image](http://www.4dsystems.com.au/imagenes/header.png)
 
-ViSi-Genie-Arduino-Library - NEW VERSION - Updated 18-MAY-2015
+ViSi-Genie-Arduino-Library - NEW VERSION - Updated 21-AUG-2015
 ==============================================================
 
-Arduino Library for 4D Systems ViSi-Genie Environment, and NEW instructions made available with Workshop4 PRO
+Arduino Library for 4D Systems ViSi-Genie Environment
 
-This library adds support for 2+ displays connected to a single Arduino, and adds a new Demo to illustrate how that is achieved
+This library now features enhanced String Writing capability, no longer is a character Array the only viable option. 
+This library recently included support for the new Workshop4 PRO features.
+This library recently added support for 2+ displays connected to a single Arduino, and adds a new Demo to illustrate how that is achieved.
 
 ## Information
 
@@ -25,11 +27,12 @@ Open the ViSi-Genie project using Workshop4 and download to your display, connec
 
 ## Example Sketch
 
-Inside the library are 2 example sketches, to assist with getting started using this library. Inside is also a ViSi-Genie Workshop4 project, which can be used on a range of 4D Systems displays (designed on a uLCD-32PTU however can be changed via Workshop4 menu). It illustrates how to use some of the commands in the library include Read Object, Write Object, Reported Messages, Write Contrast and Write String.
+Inside the library are 3 example sketches, to assist with getting started using this library. Inside is also a ViSi-Genie Workshop4 project, which can be used on a range of 4D Systems displays (designed on a uLCD-32PTU however can be changed via Workshop4 menu). It illustrates how to use some of the commands in the library include Read Object, Write Object, Reported Messages, Write Contrast and Write String.
 
 ## Tested with
 
-This library has been tested on the Duemilanove, Uno, Mega 1280, Mega 2560, Leonardo, Chipkit Max32, Due and new Intel Galileo. Any problems discovered with this library, please contact technical support so fixes can be put in place, or seek support from our forum.
+This library has been tested on the Duemilanove, Uno, Mega 1280, Mega 2560, Leonardo, Chipkit Max32, Due, Intel Galileo, Teensy and Yun (Software Serial only on Yun). 
+Any problems discovered with this library, please contact technical support so fixes can be put in place, or seek support from our forum.
 
 ## Compatible 4D Systems Display Modules
 
@@ -39,4 +42,5 @@ The demo included with this library was made for the uLCD-32PTU however can easi
 ## Questions/Issues?
 
 Please sign up for our Forum and ask a question there, or submit a Tech Support Ticket from our website.
+Please do NOT post issues on Github, as this is not actively monitored. Please use one of the following:
 http://forum.4dsystems.com.au or http://www.4dsystems.com.au/support

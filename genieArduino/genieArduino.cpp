@@ -1,10 +1,11 @@
-/////////////////////////// GenieArduino 18/05/2015 /////////////////////////
+/////////////////////////// GenieArduino 21/08/2015 /////////////////////////
 //
 //      Library to utilise the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //      Improvements/Updates by
+//        4D Systems Engineering, August 2015, www.4dsystems.com.au
 //        4D Systems Engineering, May 2015, www.4dsystems.com.au
 //        Matt Jenkins, March 2015, www.majenko.com
 //        Clinton Keith, January 2015, www.clintonkeith.com
@@ -37,6 +38,13 @@
  *********************************************************************/
 //#include <Streaming.h>
 #include "genieArduino.h"
+#include <math.h>
+#include <string.h>
+
+#define DEC 10
+#define HEX 16
+#define OCT 8
+#define BIN 2
 
 #if (ARDUINO >= 100)
 # include "Arduino.h" // for Arduino 1.0
@@ -688,6 +696,151 @@ uint16_t Genie::WriteStr (uint16_t index, char *string) {
     PushLinkState(GENIE_LINK_WFAN);
     return 0;
 }
+
+
+uint16_t Genie::WriteStr(uint16_t index, const __FlashStringHelper *ifsh)
+{
+
+	PGM_P p = reinterpret_cast<PGM_P>(ifsh);
+	PGM_P p2 = reinterpret_cast<PGM_P>(ifsh);
+	size_t n = 0;
+	int len = 0;
+	while (1) {
+		unsigned char d = pgm_read_byte(p2++);
+		len++;
+		if (d == 0) break;
+	}
+  
+ 
+	char arr[len];
+	int x = 0;
+	while (1) {
+		unsigned char c = pgm_read_byte(p++);
+		arr[x] = c;
+		x++;
+		if (c == 0) break;
+	}
+	WriteStr(index, arr);
+	return 0;
+
+	
+}
+
+
+uint16_t Genie::WriteStr (uint16_t index, long n) { 
+	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
+	char *str = &buf[sizeof(buf) - 1];
+
+	*str = '\0';
+
+	do {
+		unsigned long m = n;
+		n /= 10;
+		char c = m - 10 * n;
+		*--str = c < 10 ? c + '0' : c + 'A' - 10;
+	} while(n);
+	
+	WriteStr(index, str);
+
+	
+
+	return 0;
+}
+
+uint16_t Genie::WriteStr (uint16_t index, long n, int base) { 
+	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
+	char *str = &buf[sizeof(buf) - 1];
+
+	*str = '\0';
+
+	// prevent crash if called with base == 1
+	if (base < 2) base = 10;
+
+	do {
+		unsigned long m = n;
+		n /= base;
+		char c = m - base * n;
+		*--str = c < 10 ? c + '0' : c + 'A' - 10;
+	} while(n);
+	
+	
+    WriteStr(index, str);
+	return 0;
+}
+
+uint16_t Genie::WriteStr (uint16_t index, int n) { 
+	WriteStr (index, (long) n);
+	return 0;
+}
+
+uint16_t Genie::WriteStr (uint16_t index, int n, int base) { 
+	WriteStr (index, (long) n, base);
+	return 0;
+}
+
+uint16_t Genie::WriteStr (uint16_t index, double number, int digits) 
+{ 
+
+	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
+	char *str = &buf[sizeof(buf) - 1];
+	*str = '\0';  
+
+	double number2 = number;
+	if (number < 0.0)
+	{
+	number = -number;
+	}
+
+	// Round correctly so that print(1.999, 2) prints as "2.00"
+	double rounding = 0.5;
+	for (int i=0; i<digits; ++i)
+	rounding /= 10.0;
+
+	number += rounding;
+
+	unsigned long int_part = (unsigned long)number;
+	double remainder = number - (double)int_part;
+
+	// Extract digits from the remainder one at a time
+	int digits2 = digits;
+	str = &buf[sizeof(buf) - 1 - digits2];
+	while (digits2-- > 0)
+	{
+	remainder *= 10.0;
+	int toPrint = int(remainder);
+	char c = toPrint + 48;
+	*str++ = c;
+	remainder -= toPrint; 
+	}
+	str = &buf[sizeof(buf) - 1 - digits];
+	if (digits > 0) {
+	*--str = '.';
+	}
+	// Extract the integer part of the number and print it  
+	do {
+	unsigned long m = int_part;
+	int_part /= 10;
+	char c = m - 10 * int_part;
+	*--str = c < 10 ? c + '0' : c + 'A' - 10;
+	} while(int_part);
+
+	// Handle negative numbers
+	if (number2 < 0.0)
+	{
+	 *--str = '-';
+	}
+
+	WriteStr(index, str);
+
+	return 0;
+}
+
+uint16_t Genie::WriteStr (uint16_t index, double n){
+	WriteStr(index, n, 2);
+
+}
+
+
 
 /////////////////////// WriteStrU ////////////////////////
 //

@@ -1,4 +1,4 @@
-/////////////////////////// GenieArduino 21/08/2015 /////////////////////////
+/////////////////////////// GenieArduino 28/08/2015 /////////////////////////
 //
 //      Library to utilise the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
@@ -697,10 +697,8 @@ uint16_t Genie::WriteStr (uint16_t index, char *string) {
     return 0;
 }
 
-
-uint16_t Genie::WriteStr(uint16_t index, const __FlashStringHelper *ifsh)
-{
-
+#ifdef AVR
+uint16_t Genie::WriteStr(uint16_t index, const __FlashStringHelper *ifsh){
 	PGM_P p = reinterpret_cast<PGM_P>(ifsh);
 	PGM_P p2 = reinterpret_cast<PGM_P>(ifsh);
 	size_t n = 0;
@@ -721,11 +719,9 @@ uint16_t Genie::WriteStr(uint16_t index, const __FlashStringHelper *ifsh)
 		if (c == 0) break;
 	}
 	WriteStr(index, arr);
-	return 0;
-
-	
+	return 0;	
 }
-
+#endif
 
 uint16_t Genie::WriteStr (uint16_t index, long n) { 
 	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
@@ -778,9 +774,7 @@ uint16_t Genie::WriteStr (uint16_t index, int n, int base) {
 	return 0;
 }
 
-uint16_t Genie::WriteStr (uint16_t index, double number, int digits) 
-{ 
-
+uint16_t Genie::WriteStr (uint16_t index, double number, int digits) { 
 	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
 	char *str = &buf[sizeof(buf) - 1];
 	*str = '\0';  

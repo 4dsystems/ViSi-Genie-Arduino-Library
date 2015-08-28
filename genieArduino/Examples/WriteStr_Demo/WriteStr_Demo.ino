@@ -6,6 +6,10 @@
  * Demo uses Hardware Serial0 to communicate with the 4D Systems display module.
  * Simply create a Workshop4 Genie application for your 4D Systems display module, 
  * and place a 'Strings' object on the display, and download it to your module.
+ * 
+ * PLEASE NOTE: If you are using a non-AVR Arduino, such as a Due, or other variants
+ * such as a Chipkit or Teensy, then you will need to comment out the Flash String 
+ * line below - Line 60, as it will prevent the demo from compiling.
  */
 
 #include <genieArduino.h>
@@ -53,7 +57,7 @@ void loop()
   delay(1000);
   genie.WriteStr(0, 123.45678); // 2 decimal places by default if no value is given to decimal place.
   delay(1000);
-  genie.WriteStr(0, F("This string will be stored in flash memory"));
+  genie.WriteStr(0, F("This string will be stored in flash memory")); // For AVR Arduinos only - Needs to be commented out for Due, Chipkit, Teensy etc.
   delay(1000);
   genie.WriteStr(0, x);
   delay(1000);

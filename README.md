@@ -1,6 +1,6 @@
 ![image](http://www.4dsystems.com.au/imagenes/header.png)
 
-ViSi-Genie-Arduino-Library - NEW VERSION - Updated 21-AUG-2015
+ViSi-Genie-Arduino-Library - NEW VERSION - Updated 03-SEP-2015
 ==============================================================
 
 Arduino Library for 4D Systems ViSi-Genie Environment

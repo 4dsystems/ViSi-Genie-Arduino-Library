@@ -1,10 +1,11 @@
-/////////////////////////// GenieArduino 28/08/2015 /////////////////////////
+/////////////////////// GenieArduino 03/09/2015 ///////////////////////
 //
 //      Library to utilise the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //      Improvements/Updates by
+//        4D Systems Engineering, September 2015, www.4dsystems.com.au
 //        4D Systems Engineering, August 2015, www.4dsystems.com.au
 //        4D Systems Engineering, May 2015, www.4dsystems.com.au
 //        Matt Jenkins, March 2015, www.majenko.com
@@ -64,7 +65,7 @@ Genie::Genie() {
     UserByteReader = NULL;
     UserDoubleByteReader = NULL;
     debugSerial = NULL;
-    LinkStates[MAX_LINK_STATES] = GENIE_LINK_IDLE;
+    LinkStates[0] = GENIE_LINK_IDLE;
     LinkState = &LinkStates[0];
     Timeout = TIMEOUT_PERIOD;
     Timeouts = 0;
@@ -140,7 +141,7 @@ void Genie::WaitForIdle (void) {
     long timeout = millis() + Timeout;
 
     for ( ; millis() < timeout;) {
-        do_event_result = DoEvents();
+        do_event_result = DoEvents(false);
 
         // if there was a character received from the
         // display restart the timeout because doEvents
@@ -192,7 +193,7 @@ void Genie::PopLinkState (void) {
 //
 // This is the heart of the Genie comms state machine.
 //
-uint16_t Genie::DoEvents (void) {
+uint16_t Genie::DoEvents (bool DoHandler) {
     uint8_t c;
     static uint8_t  rx_data[6];
     static uint8_t  checksum = 0;
@@ -207,7 +208,7 @@ uint16_t Genie::DoEvents (void) {
     // queued events call the user's handler function.
     //
     if (Error == ERROR_NOCHAR) {
-        if (EventQueue.n_events > 0 && UserHandler != NULL) {
+        if ((EventQueue.n_events > 0) && (UserHandler != NULL) && DoHandler) {
             (UserHandler)();
         }
 
@@ -492,7 +493,6 @@ void Genie::Resync (void) {
 //
 void Genie::handleError (void) {
     //if (debugSerial) { *debugSerial << "Handle Error Called!\n"; }
-    Resync();
 }
 
 ////////////////////// Genie::FlushEventQueue ////////////////////
@@ -542,13 +542,34 @@ bool Genie::DequeueEvent(genieFrame * buff) {
 //
 bool Genie::EnqueueEvent (uint8_t * data) {
     if (EventQueue.n_events < MAX_GENIE_EVENTS - 2) {
-        memcpy (&EventQueue.frames[EventQueue.wr_index], data,
-                GENIE_FRAME_SIZE);
-        EventQueue.wr_index++;
-        EventQueue.wr_index &= MAX_GENIE_EVENTS - 1;
-        EventQueue.n_events++;
-        //if (debugSerial) { *debugSerial << "Enque Event " << _HEX(*data) << ", count = " << EventQueue.n_events << endl; }
-        return TRUE;
+        int i, j ;
+        bool fnd=false ;
+        j = EventQueue.wr_index ;
+        for (i = EventQueue.n_events; i > 0; i--) 
+        {
+            j-- ;
+            if (j < 0)
+                j = MAX_GENIE_EVENTS - 1;
+            if (   (EventQueue.frames[j].reportObject.cmd == data[0])
+                && (EventQueue.frames[j].reportObject.object == data[1])
+                && (EventQueue.frames[j].reportObject.index == data[2])  )
+            {
+                EventQueue.frames[j].reportObject.data_msb = data[3] ;
+                EventQueue.frames[j].reportObject.data_lsb = data[4] ;
+                fnd = true ;
+                break ;
+            }
+        }
+        if (!fnd)
+        {
+            memcpy (&EventQueue.frames[EventQueue.wr_index], data,
+                    GENIE_FRAME_SIZE);
+            EventQueue.wr_index++;
+            EventQueue.wr_index &= MAX_GENIE_EVENTS - 1;
+            EventQueue.n_events++;
+            //if (debugSerial) { *debugSerial << "Enque Event " << _HEX(*data) << ", count = " << EventQueue.n_events << endl; }
+            return TRUE;
+        }
     } else {
         Error = ERROR_REPLY_OVR;
         handleError();

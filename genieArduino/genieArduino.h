@@ -1,10 +1,11 @@
-/////////////////////// GenieArduino 28/08/2015 ///////////////////////
+/////////////////////// GenieArduino 03/09/2015 ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //      Improvements/Updates by
+//        4D Systems Engineering, September 2015, www.4dsystems.com.au
 //        4D Systems Engineering, August 2015, www.4dsystems.com.au
 //        4D Systems Engineering, May 2015, www.4dsystems.com.au
 //        Matt Jenkins, March 2015, www.majenko.com
@@ -51,7 +52,7 @@
 
 #undef GENIE_DEBUG
 
-#define GENIE_VERSION    "GenieArduino 28-08-2015"
+#define GENIE_VERSION    "GenieArduino 03-09-2015"
 
 // Genie commands & replys:
 
@@ -189,7 +190,7 @@ public:
     bool        EventIs             (genieFrame * e, uint8_t cmd, uint8_t object, uint8_t index);
     uint16_t    GetEventData        (genieFrame * e);
     bool        DequeueEvent        (genieFrame * buff);
-    uint16_t    DoEvents            (void);
+    uint16_t    DoEvents            (bool DoHandler = true);
     void        AttachEventHandler  (UserEventHandlerPtr userHandler);
     void        AttachMagicByteReader (UserBytePtr userHandler);
     void        AttachMagicDoubleByteReader (UserDoubleBytePtr userHandler);

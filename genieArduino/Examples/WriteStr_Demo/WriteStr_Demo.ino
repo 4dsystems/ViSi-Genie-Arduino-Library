@@ -49,6 +49,7 @@ void loop()
   long y = 171;
   double z = 175.3456;
   int digits = 3;
+  String Str = "This is string class";
   genie.WriteStr(0, "TEST");
   delay(1000);
   genie.WriteStr(0, z, digits); //3 decimal places
@@ -57,8 +58,10 @@ void loop()
   delay(1000);
   genie.WriteStr(0, 123.45678); // 2 decimal places by default if no value is given to decimal place.
   delay(1000);
-  genie.WriteStr(0, F("This string will be stored in flash memory")); // For AVR Arduinos only - Needs to be commented out for Due, Chipkit, Teensy etc.
+  genie.WriteStr(0, F("This string will be \n stored in flash memory")); // For AVR Arduinos only - Needs to be commented out for Due, Chipkit, Teensy etc.
   delay(1000);
+  genie.WriteStr(0, "                                                        "); // Clear
+  delay(10);
   genie.WriteStr(0, x);
   delay(1000);
   genie.WriteStr(0, y);
@@ -70,6 +73,8 @@ void loop()
   genie.WriteStr(0, 10); //base 10 by default
   delay(1000);
   genie.WriteStr(0, 10,8); //base 8
+  delay(1000);
+  genie.WriteStr(0, Str); //prints String Class
   delay(1000);
 }
 

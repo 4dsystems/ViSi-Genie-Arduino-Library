@@ -1,4 +1,4 @@
-/////////////////////// GenieArduino 03/09/2015 ///////////////////////
+/////////////////////// GenieArduino 16/09/2015 ///////////////////////
 //
 //      Library to utilise the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
@@ -743,6 +743,16 @@ uint16_t Genie::WriteStr(uint16_t index, const __FlashStringHelper *ifsh){
 	return 0;	
 }
 #endif
+
+uint16_t Genie::WriteStr(uint16_t index, const String &s){
+	//s.c_str(), s.length()
+	int len = s.length();
+	char arr[len + 1];
+	s.toCharArray(arr,len + 1);
+	WriteStr(index, arr);
+	return 0;	
+}
+
 
 uint16_t Genie::WriteStr (uint16_t index, long n) { 
 	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.

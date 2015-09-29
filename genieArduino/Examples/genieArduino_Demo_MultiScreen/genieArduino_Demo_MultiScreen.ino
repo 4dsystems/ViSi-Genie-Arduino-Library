@@ -60,9 +60,9 @@ void setup()
 
   delay (3500); //let the display start up after the reset (This is important)
 
-  //Turn the Display on (Contrast) - (Not needed but illustrates how) 
+  //Set the brightness/Contrast of the Display - (Not needed but illustrates how) 
   //Most Displays, 1 = Display ON, 0 = Display OFF
-  //For uLCD43, uLCD-70DT, and uLCD-35DT, use 0-15 for Brightness Control, where 0 = Display OFF, though to 15 = Max Brightness ON.
+  //For uLCD-43, uLCD-220RD, uLCD-70DT, and uLCD-35DT, use 0-15 for Brightness Control, where 0 = Display OFF, though to 15 = Max Brightness ON.
   display1.WriteContrast(1); // Display ON
   display2.WriteContrast(1); // Display ON
   
@@ -85,25 +85,28 @@ void loop()
 
   if (millis() >= waitPeriod)
   {
-    // Write to CoolGauge0 with the value in the gaugeVal variable
+    // Write to CoolGauge0 with the value in the gaugeVal variable on Display 1
     display1.WriteObject(GENIE_OBJ_COOL_GAUGE, 0, gaugeVal1);
+    
+    // Simulation code for Gauge on Display 1, just to increment and decrement gauge value each loop, for animation
     gaugeVal1 += gaugeAddVal1;
     if (gaugeVal1 >= 99) gaugeAddVal1 = -1; // If the value is > or = to 99, make gauge decrease in value by 1
     if (gaugeVal1 <= 0) gaugeAddVal1 = 1; // If the value is < or = to 0, make gauge increase in value by 1
 
     // The results of this call will be available to myGenieEventHandler() after the display has responded
-    // Do a manual read from the UserLEd0 object
+    // Do a manual read from the UserLEd0 object on Display 1
     display1.ReadObject(GENIE_OBJ_USER_LED, 0);
     
-    // Write to CoolGauge0 with the value in the gaugeVal variable
+    // Write to CoolGauge0 with the value in the gaugeVal variable on Display 2
     display2.WriteObject(GENIE_OBJ_COOL_GAUGE, 0, gaugeVal2);
+    
+    // Simulation code for Gauge on Display 2, just to increment and decrement gauge value each loop, for animation
     gaugeVal2 += gaugeAddVal2;
     if (gaugeVal2 >= 99) gaugeAddVal2 = -2; // If the value is > or = to 99, make gauge decrease in value by 2
     if (gaugeVal2 <= 0) gaugeAddVal2 = 2; // If the value is < or = to 0, make gauge increase in value by 2
 
     // The results of this call will be available to myGenieEventHandler() after the display has responded
-    // Do a manual read from the UserLed0 object
-    display1.ReadObject(GENIE_OBJ_USER_LED, 0);
+    // Do a manual read from the UserLed0 object on Display 2
     display2.ReadObject(GENIE_OBJ_USER_LED, 0);
 
     waitPeriod = millis() + 50; // rerun this code to update Cool Gauge and Slider in another 50ms time.
@@ -120,7 +123,7 @@ void loop()
 //
 // The event can be either a REPORT_EVENT frame sent asynchronously
 // from the display or a REPORT_OBJ frame sent by the display in
-// response to a READ_OBJ request.
+// response to a READ_OBJ (genie.ReadObject) request.
 //
 
 // Event Handler Function for Display 1
@@ -134,9 +137,9 @@ void myGenieEventHandler1(void)
   {
     if (Event.reportObject.object == GENIE_OBJ_SLIDER)                   // If the Reported Message was from a Slider
     {
-      if (Event.reportObject.index == 0)                                 // If Slider0
+      if (Event.reportObject.index == 0)                                 // If Slider0 (Index = 0)
       {
-        int slider_val = display1.GetEventData(&Event);                      // Receive the event data from the Slider0
+        int slider_val = display1.GetEventData(&Event);                  // Receive the event data from the Slider0
         display2.WriteObject(GENIE_OBJ_LED_DIGITS, 0, slider_val);       // Write Slider0 value of Display 1 to to LED Digits 0 of Display 2 !
       }
     }
@@ -147,7 +150,7 @@ void myGenieEventHandler1(void)
   {
     if (Event.reportObject.object == GENIE_OBJ_USER_LED)                 // If the Reported Message was from a User LED
     {
-      if (Event.reportObject.index == 0)                                 // If UserLed0
+      if (Event.reportObject.index == 0)                                 // If UserLed0 (Index = 0)
       {
         bool UserLed0_val = display1.GetEventData(&Event);               // Receive the event data from the UserLed0
         UserLed0_val = !UserLed0_val;                                    // Toggle the state of the User LED Variable
@@ -168,9 +171,9 @@ void myGenieEventHandler2(void)
   {
     if (Event.reportObject.object == GENIE_OBJ_SLIDER)                   // If the Reported Message was from a Slider
     {
-      if (Event.reportObject.index == 0)                                 // If Slider0
+      if (Event.reportObject.index == 0)                                 // If Slider0 (Index = 0)
       {
-        int slider_val = display2.GetEventData(&Event);                      // Receive the event data from the Slider0
+        int slider_val = display2.GetEventData(&Event);                  // Receive the event data from the Slider0
         display1.WriteObject(GENIE_OBJ_LED_DIGITS, 0, slider_val);       // Write Slider0 value of Display 2 to to LED Digits 0 of Display 1
       }
     }
@@ -181,7 +184,7 @@ void myGenieEventHandler2(void)
   {
     if (Event.reportObject.object == GENIE_OBJ_USER_LED)                 // If the Reported Message was from a User LED
     {
-      if (Event.reportObject.index == 0)                                 // If UserLed0
+      if (Event.reportObject.index == 0)                                 // If UserLed0 (Index = 0)
       {
         bool UserLed0_val = display2.GetEventData(&Event);               // Receive the event data from the UserLed0
         UserLed0_val = !UserLed0_val;                                    // Toggle the state of the User LED Variable
@@ -189,11 +192,12 @@ void myGenieEventHandler2(void)
       }
     }
   }
+
+  /********** This can be expanded as more objects are added that need to be captured *************
+  *************************************************************************************************
+  Event.reportObject.cmd is used to determine the command of that event, such as an reported event
+  Event.reportObject.object is used to determine the object type, such as a Slider
+  Event.reportObject.index is used to determine the index of the object, such as Slider0
+  genie.GetEventData(&Event) us used to save the data from the Event, into a variable.
+  *************************************************************************************************/
 }
-//These can be expanded as more objects are added that need to be captured
-
-//Event.reportObject.cmd is used to determine the command of that event, such as an reported event
-//Event.reportObject.object is used to determine the object type, such as a Slider
-//Event.reportObject.index is used to determine the index of the object, such as Slider0
-//genie.GetEventData(&Event) us used to save the data from the Event, into a variable.
-

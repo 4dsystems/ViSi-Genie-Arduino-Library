@@ -46,9 +46,10 @@ void setup()
 
   delay (3500); //let the display start up after the reset (This is important)
 
-  //Turn the Display on (Contrast) - (Not needed but illustrates how)
-  genie.WriteContrast(1); // 1 = Display ON, 0 = Display OFF.
-  //For uLCD43, uLCD-70DT, and uLCD-35DT, use 0-15 for Brightness Control, where 0 = Display OFF, though to 15 = Max Brightness ON.
+  // Set the brightness/Contrast of the Display - (Not needed but illustrates how)
+  // Most Displays, 1 = Display ON, 0 = Display OFF. See below for exceptions and for DIABLO16 displays.
+  // For uLCD-43, uLCD-220RD, uLCD-70DT, and uLCD-35DT, use 0-15 for Brightness Control, where 0 = Display OFF, though to 15 = Max Brightness ON.
+  genie.WriteContrast(1); 
 
   //Write a string to the Display to show the version of the library used
   genie.WriteStr(0, GENIE_VERSION);
@@ -57,22 +58,23 @@ void setup()
 void loop()
 {
   static long waitPeriod = millis();
-  static int gaugeAddVal = 1;
-  static int gaugeVal = 50;
+  static int gaugeAddVal = 1; // Simulation code variable. Value to change the gauge by each loop
+  static int gaugeVal = 50; // Simulation code variable. Value to start the gauge at when powered on
 
   genie.DoEvents(); // This calls the library each loop to process the queued responses from the display
 
   if (millis() >= waitPeriod)
   {
     // Write to CoolGauge0 with the value in the gaugeVal variable
-    genie.WriteObject(GENIE_OBJ_COOL_GAUGE, 0x00, gaugeVal);
+    genie.WriteObject(GENIE_OBJ_COOL_GAUGE, 0, gaugeVal);
+
+    // Simulation code, just to increment and decrement gauge value each loop, for animation
     gaugeVal += gaugeAddVal;
     if (gaugeVal == 99) gaugeAddVal = -1;
     if (gaugeVal == 0) gaugeAddVal = 1;
 
     // The results of this call will be available to myGenieEventHandler() after the display has responded
-    // Do a manual read from the UserLEd0 object
-    genie.ReadObject(GENIE_OBJ_USER_LED, 0x00);
+    genie.ReadObject(GENIE_OBJ_USER_LED, 0); // Do a manual read from the UserLEd0 object
 
     waitPeriod = millis() + 50; // rerun this code to update Cool Gauge and Slider in another 50ms time.
   }
@@ -88,24 +90,30 @@ void loop()
 //
 // The event can be either a REPORT_EVENT frame sent asynchronously
 // from the display or a REPORT_OBJ frame sent by the display in
-// response to a READ_OBJ request.
+// response to a READ_OBJ (genie.ReadObject) request.
 //
 
 /* COMPACT VERSION HERE, LONGHAND VERSION BELOW WHICH MAY MAKE MORE SENSE
 void myGenieEventHandler(void)
 {
   genieFrame Event;
-  int slider_val = 0;
-  const int index = 0;  //HARD CODED TO READ FROM Index = 0, ie Slider0 as an example
-
   genieDequeueEvent(&Event);
 
-  //Read from Slider0 for both a Reported Message from Display, and a Manual Read Object from loop code above
-  if (genieEventIs(&Event, GENIE_REPORT_EVENT, GENIE_OBJ_SLIDER, index) ||
-    genieEventIs(&Event, GENIE_REPORT_OBJ,   GENIE_OBJ_SLIDER, index))
+  int slider_val = 0;
+
+  //Filter Events from Slider0 (Index = 0) for a Reported Message from Display
+  if (genieEventIs(&Event, GENIE_REPORT_EVENT, GENIE_OBJ_SLIDER, 0))
   {
     slider_val = genieGetEventData(&Event);  // Receive the event data from the Slider0
-    genieWriteObject(GENIE_OBJ_LED_DIGITS, 0x00, slider_val);     // Write Slider0 value to to LED Digits 0
+    genieWriteObject(GENIE_OBJ_LED_DIGITS, 0, slider_val);     // Write Slider0 value to to LED Digits 0
+  }
+
+  //Filter Events from UserLed0 (Index = 0) for a Reported Object from Display (triggered from genie.ReadObject in User Code)
+  if (genieEventIs(&Event, GENIE_REPORT_OBJ,   GENIE_OBJ_USER_LED, 0))
+  {
+    bool UserLed0_val = genie.GetEventData(&Event);               // Receive the event data from the UserLed0
+    UserLed0_val = !UserLed0_val;                                 // Toggle the state of the User LED Variable
+    genie.WriteObject(GENIE_OBJ_USER_LED, 0, UserLed0_val);       // Write UserLed0_val value back to to UserLed0
   }
 } */
 
@@ -113,7 +121,7 @@ void myGenieEventHandler(void)
 void myGenieEventHandler(void)
 {
   genieFrame Event;
-  genie.DequeueEvent(&Event);
+  genie.DequeueEvent(&Event); // Remove the next queued event from the buffer, and process it below
 
   int slider_val = 0;
 
@@ -122,10 +130,10 @@ void myGenieEventHandler(void)
   {
     if (Event.reportObject.object == GENIE_OBJ_SLIDER)                // If the Reported Message was from a Slider
     {
-      if (Event.reportObject.index == 0)                              // If Slider0
+      if (Event.reportObject.index == 0)                              // If Slider0 (Index = 0)
       {
         slider_val = genie.GetEventData(&Event);                      // Receive the event data from the Slider0
-        genie.WriteObject(GENIE_OBJ_LED_DIGITS, 0x00, slider_val);    // Write Slider0 value to to LED Digits 0
+        genie.WriteObject(GENIE_OBJ_LED_DIGITS, 0, slider_val);       // Write Slider0 value to to LED Digits 0
       }
     }
   }
@@ -135,20 +143,21 @@ void myGenieEventHandler(void)
   {
     if (Event.reportObject.object == GENIE_OBJ_USER_LED)              // If the Reported Message was from a User LED
     {
-      if (Event.reportObject.index == 0)                              // If UserLed0
+      if (Event.reportObject.index == 0)                              // If UserLed0 (Index = 0)
       {
         bool UserLed0_val = genie.GetEventData(&Event);               // Receive the event data from the UserLed0
         UserLed0_val = !UserLed0_val;                                 // Toggle the state of the User LED Variable
-        genie.WriteObject(GENIE_OBJ_USER_LED, 0x00, UserLed0_val);    // Write UserLed0_val value back to to UserLed0
+        genie.WriteObject(GENIE_OBJ_USER_LED, 0, UserLed0_val);       // Write UserLed0_val value back to to UserLed0
       }
     }
   }
 
-  //This can be expanded as more objects are added that need to be captured
-
-  //Event.reportObject.cmd is used to determine the command of that event, such as an reported event
-  //Event.reportObject.object is used to determine the object type, such as a Slider
-  //Event.reportObject.index is used to determine the index of the object, such as Slider0
-  //genie.GetEventData(&Event) us used to save the data from the Event, into a variable.
+  /********** This can be expanded as more objects are added that need to be captured *************
+  *************************************************************************************************
+  Event.reportObject.cmd is used to determine the command of that event, such as an reported event
+  Event.reportObject.object is used to determine the object type, such as a Slider
+  Event.reportObject.index is used to determine the index of the object, such as Slider0
+  genie.GetEventData(&Event) us used to save the data from the Event, into a variable.
+  *************************************************************************************************/
 }
 

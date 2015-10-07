@@ -1,10 +1,11 @@
-/////////////////////// GenieArduino 16/09/2015 ///////////////////////
+/////////////////////// GenieArduino 06/10/2015 ///////////////////////
 //
 //      Library to utilise the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //      Improvements/Updates by
+//        4D Systems Engineering, October 2015, www.4dsystems.com.au
 //        4D Systems Engineering, September 2015, www.4dsystems.com.au
 //        4D Systems Engineering, August 2015, www.4dsystems.com.au
 //        4D Systems Engineering, May 2015, www.4dsystems.com.au
@@ -53,11 +54,11 @@
 # include "WProgram.h" // for Arduino 23
 #endif
 
-int freeRam () {
-    extern int __heap_start, *__brkval;
-    int v;
-    return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
-}
+//int freeRam () {
+//    extern int __heap_start, *__brkval;
+//    int v;
+//    return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+//}
 
 Genie::Genie() {
     // Pointer to the user's event handler function
@@ -673,7 +674,7 @@ uint16_t Genie::WriteObject (uint16_t object, uint16_t index, uint16_t data) {
 //
 // Parms:   uint8_t value: The required contrast setting, only
 //      values from 0 to 15 are valid. 0 or 1 for most displays
-//      and 0 to 15 for the uLCD-43, uLCD-70, uLCD-35
+//      and 0 to 15 for the uLCD-43, uLCD-70, uLCD-35, uLCD-220RD
 //
 void Genie::WriteContrast (uint16_t value) {
     unsigned int checksum ;
@@ -757,6 +758,9 @@ uint16_t Genie::WriteStr(uint16_t index, const String &s){
 uint16_t Genie::WriteStr (uint16_t index, long n) { 
 	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
 	char *str = &buf[sizeof(buf) - 1];
+	
+	long N = n;
+	n = abs(n);
 
 	*str = '\0';
 
@@ -766,6 +770,10 @@ uint16_t Genie::WriteStr (uint16_t index, long n) {
 		char c = m - 10 * n;
 		*--str = c < 10 ? c + '0' : c + 'A' - 10;
 	} while(n);
+	
+	if (N < 0) {
+		*--str = '-';
+	}
 	
 	WriteStr(index, str);
 
@@ -777,18 +785,47 @@ uint16_t Genie::WriteStr (uint16_t index, long n) {
 uint16_t Genie::WriteStr (uint16_t index, long n, int base) { 
 	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
 	char *str = &buf[sizeof(buf) - 1];
-
+	
+	long N;
 	*str = '\0';
-
-	// prevent crash if called with base == 1
-	if (base < 2) base = 10;
-
-	do {
-		unsigned long m = n;
-		n /= base;
-		char c = m - base * n;
+	if(n>=0)
+	{
+		// prevent crash if called with base == 1
+		if (base < 2) base = 10;
+		if(base == 10)
+		{
+			N = n;
+			n = abs(n);
+		}
+	
+		do {
+			unsigned long m = n;
+			n /= base;
+			char c = m - base * n;
+			*--str = c < 10 ? c + '0' : c + 'A' - 10;
+		} while(n);
+		
+		if(base == 10)
+		{
+			if (N < 0) {
+				*--str = '-';
+			}
+		}
+			
+	}
+	
+	else if(n<0)
+	{
+		unsigned long n2 = (unsigned long)n;
+		uint8_t base2 = base;
+		do {
+		unsigned long m = n2;
+		n2 /= base2;
+		char c = m - base2 * n2;
 		*--str = c < 10 ? c + '0' : c + 'A' - 10;
-	} while(n);
+		} while(n2);
+		
+	}
 	
 	
     WriteStr(index, str);
@@ -804,6 +841,56 @@ uint16_t Genie::WriteStr (uint16_t index, int n, int base) {
 	WriteStr (index, (long) n, base);
 	return 0;
 }
+
+uint16_t Genie::WriteStr (uint16_t index, unsigned long n) { 
+	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
+	char *str = &buf[sizeof(buf) - 1];
+	
+	long N = n;
+	n = abs(n);
+
+	*str = '\0';
+
+	do {
+		unsigned long m = n;
+		n /= 10;
+		char c = m - 10 * n;
+		*--str = c < 10 ? c + '0' : c + 'A' - 10;
+	} while(n);
+	
+	WriteStr(index, str);
+	return 0;
+}
+
+uint16_t Genie::WriteStr (uint16_t index, unsigned long n, int base) { 
+	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
+	char *str = &buf[sizeof(buf) - 1];
+	
+	*str = '\0';
+
+	// prevent crash if called with base == 1
+	if (base < 2) base = 10;
+	do {
+		unsigned long m = n;
+		n /= base;
+		char c = m - base * n;
+		*--str = c < 10 ? c + '0' : c + 'A' - 10;
+	} while(n);
+				
+    WriteStr(index, str);
+	return 0;
+}
+
+uint16_t Genie::WriteStr (uint16_t index, unsigned int n) { 
+	WriteStr (index, (unsigned long) n);
+	return 0;
+}
+
+uint16_t Genie::WriteStr (uint16_t index, unsigned n, int base) { 
+	WriteStr (index, (unsigned long) n, base);
+	return 0;
+}
+
 
 uint16_t Genie::WriteStr (uint16_t index, double number, int digits) { 
 	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
@@ -864,8 +951,6 @@ uint16_t Genie::WriteStr (uint16_t index, double n){
 	WriteStr(index, n, 2);
 
 }
-
-
 
 /////////////////////// WriteStrU ////////////////////////
 //
@@ -957,70 +1042,6 @@ void Genie::Begin (Stream &serial) {
     PushLinkState(GENIE_LINK_IDLE);
     FlushEventQueue();
 }
-
-/*
-DEPRECATED
-This function was deprecated because it is no longer needed and it
-was assumed to 'begin' the serial port, which it didn't
-
-//////////////////////////////////// Setup /////////////////////////////////////////
-//
-//  Dummy interface for old library version
-//
-void Genie::Setup (Stream &serial, uint32_t baud) {
-    Begin (serial);
-}
-*/
-
-/*
-DEPRECATED
-This function was removed to eliminate to the need to update it
-for every platform required
-
-/////////////////////////////////// Begin ///////////////////////////////////////////
-//
-//
-//  boolean Begin (uint8_t port, uint32_t baud)
-//
-//  uint8_t port:   A port number/type from the _port_types enum, ie
-//                  GENIE_SERIAL, standard serial port on all Arduinos
-//                  GENIE_SERIAL_1, serial port 1 if available on the host platform
-//                  GENIE_SERIAL_2, serial port 2 if available on the host platform
-//                  GENIE_SERIAL_3, serial port 3 if available on the host platform
-//
-//
-//  Returns:        True if the setup worked, false if not
-//
-uint16_t Genie::Begin(uint8_t port, uint32_t baud){
-
-    switch (port) {
-        case GENIE_SERIAL:              // All Arduinos basically
-            Serial.begin(baud);
-            Begin(Serial);
-            break;
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega644P__) || defined(__AVR_ATmega32U4__) || defined(__SAM3X8E__) || defined(__32MX320F128H__) || defined(__32MX795F512L__) || defined(__linux__)
-        case GENIE_SERIAL_1:            // Megas, Due, Chipkit Uno32, Chipkit Max32, Intel Galileo, Leonardo, 644P etc
-            Serial1.begin(baud);
-            Begin(Serial1);
-            break;
-#endif
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__SAM3X8E__) || defined(__32MX795F512L__)
-        case GENIE_SERIAL_2:            // Megas, Due, Chipkit Max32
-            Serial2.begin(baud);
-            Begin(Serial2);
-            break;
-        case GENIE_SERIAL_3:            // Megas, Due, Chipkit Max32
-            Serial3.begin(baud);
-            Begin(Serial3);
-            break;
-#endif
-        default:
-            // bad serial port
-            return false;
-    }
-    return true;
-}
-*/
 
 /////////////////////// WriteMagicBytes ////////////////////////
 //

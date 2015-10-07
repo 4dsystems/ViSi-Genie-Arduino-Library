@@ -45,7 +45,7 @@ void loop()
 {
   //An optional third parameter specifies the base (format) to use; permitted values are BIN (binary, or base 2), OCT (octal, or base 8), DEC (decimal, or base 10), HEX (hexadecimal, or base 16). 
   //For floating point numbers, this parameter specifies the number of decimal places to use.
-  int x = 78;
+  int x = -78;
   long y = 171;
   double z = 175.3456;
   int digits = 3;
@@ -62,11 +62,11 @@ void loop()
   delay(1000);
   genie.WriteStr(0, "                                                        "); // Clear
   delay(10);
-  genie.WriteStr(0, x);
+  genie.WriteStr(0, x); //prints negative integer
   delay(1000);
   genie.WriteStr(0, y);
   delay(1000);
-  genie.WriteStr(0, x,2); //base 2
+  genie.WriteStr(0, -x, BIN); //base 2 of 78
   delay(1000);
   genie.WriteStr(0, y,16); //base 16
   delay(1000);
@@ -75,6 +75,12 @@ void loop()
   genie.WriteStr(0, 10,8); //base 8
   delay(1000);
   genie.WriteStr(0, Str); //prints String Class
+  delay(1000);
+  unsigned int zc = 123 ;
+  genie.WriteStr(0, zc); //prints unsigned ints
+  delay(1000);
+  unsigned long e = 1234 ;
+  genie.WriteStr(0, e); //prints unsigned long
   delay(1000);
 }
 

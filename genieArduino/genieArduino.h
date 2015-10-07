@@ -1,10 +1,11 @@
-/////////////////////// GenieArduino 16/09/2015 ///////////////////////
+/////////////////////// GenieArduino 06/10/2015 ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //      Improvements/Updates by
+//        4D Systems Engineering, October 2015, www.4dsystems.com.au
 //        4D Systems Engineering, September 2015, www.4dsystems.com.au
 //        4D Systems Engineering, August 2015, www.4dsystems.com.au
 //        4D Systems Engineering, May 2015, www.4dsystems.com.au
@@ -52,7 +53,7 @@
 
 #undef GENIE_DEBUG
 
-#define GENIE_VERSION    "GenieArduino 16-09-2015"
+#define GENIE_VERSION    "GenieArduino 06-10-2015"
 
 // Genie commands & replys:
 
@@ -179,8 +180,12 @@ public:
     uint16_t    WriteStr            (uint16_t index, char *string);
 	uint16_t	WriteStr			(uint16_t index, long n) ;
 	uint16_t	WriteStr			(uint16_t index, long n, int base) ;
+	uint16_t	WriteStr			(uint16_t index, unsigned long n) ;
+	uint16_t	WriteStr			(uint16_t index, unsigned long n, int base) ;
 	uint16_t	WriteStr			(uint16_t index, int n) ;
 	uint16_t	WriteStr			(uint16_t index, int n, int base) ;
+	uint16_t	WriteStr			(uint16_t index, unsigned int n) ;
+	uint16_t	WriteStr			(uint16_t index, unsigned int n, int base) ;
 	uint16_t	WriteStr			(uint16_t index, const String &s);
 #ifdef AVR
 	uint16_t	WriteStr			(uint16_t index, const __FlashStringHelper *ifsh);

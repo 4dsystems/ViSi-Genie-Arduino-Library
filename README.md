@@ -1,10 +1,11 @@
 ![image](http://www.4dsystems.com.au/imagenes/header.png)
 
-ViSi-Genie-Arduino-Library - NEW VERSION - Updated 03-SEP-2015
+ViSi-Genie-Arduino-Library - NEW VERSION - Updated 10-OCT-2015
 ==============================================================
 
 Arduino Library for 4D Systems ViSi-Genie Environment
 
+This library now supports support for neagative numbers, unsigned longs, unsigned integers with the WriteStr function.
 This library now features enhanced String Writing capability, no longer is a character Array the only viable option. 
 This library recently included support for the new Workshop4 PRO features.
 This library recently added support for 2+ displays connected to a single Arduino, and adds a new Demo to illustrate how that is achieved.

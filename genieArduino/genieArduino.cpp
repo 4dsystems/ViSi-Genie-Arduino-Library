@@ -1,10 +1,11 @@
-/////////////////////// GenieArduino 06/10/2015 ///////////////////////
+/////////////////////// GenieArduino 26/01/2016 ///////////////////////
 //
 //      Library to utilise the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //      Improvements/Updates by
+//        4D Systems Engineering, January 2016, www.4dsystems.com.au
 //        4D Systems Engineering, October 2015, www.4dsystems.com.au
 //        4D Systems Engineering, September 2015, www.4dsystems.com.au
 //        4D Systems Engineering, August 2015, www.4dsystems.com.au
@@ -48,11 +49,13 @@
 #define OCT 8
 #define BIN 2
 
-#if (ARDUINO >= 100)
-# include "Arduino.h" // for Arduino 1.0
-#else
-# include "WProgram.h" // for Arduino 23
-#endif
+#if defined(ARDUINO) 
+	#if ARDUINO >= 100
+		#include "Arduino.h"
+	#else
+		#include "WProgram.h"
+	#endif
+#endif	
 
 //int freeRam () {
 //    extern int __heap_start, *__brkval;

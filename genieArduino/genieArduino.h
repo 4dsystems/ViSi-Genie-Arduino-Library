@@ -1,10 +1,11 @@
-/////////////////////// GenieArduino 06/10/2015 ///////////////////////
+/////////////////////// GenieArduino 26/01/2016 ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //      Improvements/Updates by
+//        4D Systems Engineering, January 2016, www.4dsystems.com.au
 //        4D Systems Engineering, October 2015, www.4dsystems.com.au
 //        4D Systems Engineering, September 2015, www.4dsystems.com.au
 //        4D Systems Engineering, August 2015, www.4dsystems.com.au
@@ -38,14 +39,20 @@
  *    License along with genieArduino.
  *    If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
-#if defined(ARDUINO) && ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
+
+#if defined(SPARK)
+	#include "application.h"
+	#define lowByte(w) ((uint8_t)((w) & 0xFF))
+	#define highByte(w) ((uint8_t)((w) >> 8))
+#elif defined(ARDUINO) 
+	#if ARDUINO >= 100
+		#include "Arduino.h"
+	#else
+		#include "WProgram.h"
+	#endif
+#endif	
 
 #include <inttypes.h>
-
 #include <stdint.h>
 
 #ifndef genieArduino_h
@@ -53,7 +60,7 @@
 
 #undef GENIE_DEBUG
 
-#define GENIE_VERSION    "GenieArduino 06-10-2015"
+#define GENIE_VERSION    "GenieArduino 26-01-2016"
 
 // Genie commands & replys:
 

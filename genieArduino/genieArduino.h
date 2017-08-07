@@ -114,6 +114,10 @@
 #define GENIE_OBJ_ANIBUTTON     31
 #define GENIE_OBJ_COLORPICKER   32
 #define GENIE_OBJ_USERBUTTON    33
+// reserved for magic functions 34
+#define GENIE_OBJ_ISMARTGAUGE   35
+#define GENIE_OBJ_ISMARTSLIDER  36
+#define GENIE_OBJ_ISMARTKNOB    37
 
 // Structure to store replys returned from a display
 

@@ -97,23 +97,23 @@ void loop()
 void myGenieEventHandler(void)
 {
   genieFrame Event;
-  genieDequeueEvent(&Event);
+  genie.DequeueEvent(&Event);
 
   int slider_val = 0;
 
   //Filter Events from Slider0 (Index = 0) for a Reported Message from Display
-  if (genieEventIs(&Event, GENIE_REPORT_EVENT, GENIE_OBJ_SLIDER, 0))
+  if (genie.EventIs(&Event, GENIE_REPORT_EVENT, GENIE_OBJ_SLIDER, 0))
   {
-    slider_val = genieGetEventData(&Event);  // Receive the event data from the Slider0
-    genieWriteObject(GENIE_OBJ_LED_DIGITS, 0, slider_val);     // Write Slider0 value to to LED Digits 0
+    slider_val = genie.GetEventData(&Event);  // Receive the event data from the Slider0
+    genie.WriteObject(GENIE_OBJ_LED_DIGITS, 0, slider_val);     // Write Slider0 value to LED Digits 0
   }
 
   //Filter Events from UserLed0 (Index = 0) for a Reported Object from Display (triggered from genie.ReadObject in User Code)
-  if (genieEventIs(&Event, GENIE_REPORT_OBJ,   GENIE_OBJ_USER_LED, 0))
+  if (genie.EventIs(&Event, GENIE_REPORT_OBJ,   GENIE_OBJ_USER_LED, 0))
   {
     bool UserLed0_val = genie.GetEventData(&Event);               // Receive the event data from the UserLed0
     UserLed0_val = !UserLed0_val;                                 // Toggle the state of the User LED Variable
-    genie.WriteObject(GENIE_OBJ_USER_LED, 0, UserLed0_val);       // Write UserLed0_val value back to to UserLed0
+    genie.WriteObject(GENIE_OBJ_USER_LED, 0, UserLed0_val);       // Write UserLed0_val value back to UserLed0
   }
 } */
 
@@ -133,7 +133,7 @@ void myGenieEventHandler(void)
       if (Event.reportObject.index == 0)                              // If Slider0 (Index = 0)
       {
         slider_val = genie.GetEventData(&Event);                      // Receive the event data from the Slider0
-        genie.WriteObject(GENIE_OBJ_LED_DIGITS, 0, slider_val);       // Write Slider0 value to to LED Digits 0
+        genie.WriteObject(GENIE_OBJ_LED_DIGITS, 0, slider_val);       // Write Slider0 value to LED Digits 0
       }
     }
   }
@@ -147,7 +147,7 @@ void myGenieEventHandler(void)
       {
         bool UserLed0_val = genie.GetEventData(&Event);               // Receive the event data from the UserLed0
         UserLed0_val = !UserLed0_val;                                 // Toggle the state of the User LED Variable
-        genie.WriteObject(GENIE_OBJ_USER_LED, 0, UserLed0_val);       // Write UserLed0_val value back to to UserLed0
+        genie.WriteObject(GENIE_OBJ_USER_LED, 0, UserLed0_val);       // Write UserLed0_val value back to UserLed0
       }
     }
   }

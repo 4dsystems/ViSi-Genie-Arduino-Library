@@ -1,24 +1,24 @@
-/////////////////////// GenieArduino 04/08/2017 ///////////////////////
+/////////////////// GenieArduino v1.4.5 04/08/2017 ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //      Improvements/Updates by
-//        4D Systems Engineering, August 2017, www.4dsystems.com.au
-//        4D Systems Engineering, October 2015, www.4dsystems.com.au
-//        4D Systems Engineering, September 2015, www.4dsystems.com.au
-//        4D Systems Engineering, August 2015, www.4dsystems.com.au
-//        4D Systems Engineering, May 2015, www.4dsystems.com.au
-//        Matt Jenkins, March 2015, www.majenko.com
-//        Clinton Keith, January 2015, www.clintonkeith.com
-//        4D Systems Engineering, July 2014, www.4dsystems.com.au
-//        Clinton Keith, March 2014, www.clintonkeith.com
-//        Clinton Keith, January 2014, www.clintonkeith.com
-//        4D Systems Engineering, January 2014, www.4dsystems.com.au
-//        4D Systems Engineering, September 2013, www.4dsystems.com.au
+//        v1.4.5 4D Systems Engineering, August 2017, www.4dsystems.com.au
+//        v1.4.4 4D Systems Engineering, October 2015, www.4dsystems.com.au
+//        v1.4.3 4D Systems Engineering, September 2015, www.4dsystems.com.au
+//        v1.4.2 4D Systems Engineering, August 2015, www.4dsystems.com.au
+//        v1.4.1 4D Systems Engineering, May 2015, www.4dsystems.com.au
+//        v1.4.0 Matt Jenkins, March 2015, www.majenko.com
+//        v1.3.0 Clinton Keith, January 2015, www.clintonkeith.com
+//        v1.2.0 4D Systems Engineering, July 2014, www.4dsystems.com.au
+//        v1.1.2 Clinton Keith, March 2014, www.clintonkeith.com
+//        v1.1.1 Clinton Keith, January 2014, www.clintonkeith.com
+//        v1.1.0 4D Systems Engineering, January 2014, www.4dsystems.com.au
+//        v1.0.1 4D Systems Engineering, September 2013, www.4dsystems.com.au
 //      Written by
-//        Rob Gray (GRAYnomad), June 2013, www.robgray.com
+//        v1.0.0 Rob Gray (GRAYnomad), June 2013, www.robgray.com
 //      Based on code by
 //        Gordon Henderson, February 2013, <projects@drogon.net>
 //
@@ -54,7 +54,7 @@
 
 #undef GENIE_DEBUG
 
-#define GENIE_VERSION    "GenieArduino 04-08-2017" // DD-MM-YYYY
+#define GENIE_VERSION    "v1.4.5 - 04-08-2017" // DD-MM-YYYY
 
 // Genie commands & replys:
 

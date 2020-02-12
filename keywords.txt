@@ -1,0 +1,54 @@
+#######################################
+# Syntax Coloring Map GenieArduino Feb 2020
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Genie	KEYWORD1
+genieFrame	KEYWORD1
+EventQueueStruct	KEYWORD1
+MagicReportHeader	KEYWORD1
+FrameReportObj	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+
+Begin	KEYWORD2
+ReadObject	KEYWORD2
+WriteObject	KEYWORD2
+WriteContrast	KEYWORD2
+WriteStrU	KEYWORD2
+WriteStrU	KEYWORD2
+EventIs	KEYWORD2
+GetEventData	KEYWORD2
+DequeueEvent	KEYWORD2
+DoEvents	KEYWORD2
+AttachEventHandler	KEYWORD2
+AttachMagicByteReader	KEYWORD2
+AttachMagicDoubleByteReader	KEYWORD2
+pulse	KEYWORD2
+assignDebugPort	KEYWORD2
+WriteMagicBytes	KEYWORD2
+WriteMagicDBytes	KEYWORD2
+GetNextByte	KEYWORD2
+GetNextDoubleByte	KEYWORD2
+
+######################################
+# Constants (LITERAL1)
+#######################################
+
+GENIE_READ_OBJ	LITERAL1
+GENIE_WRITE_OBJ	LITERAL1
+GENIE_WRITE_STR	LITERAL1
+GENIE_WRITE_STRU	LITERAL1
+GENIE_WRITE_CONTRAST	LITERAL1
+GENIE_REPORT_OBJ	LITERAL1
+GENIE_REPORT_EVENT	LITERAL1
+GENIEM_WRITE_BYTES	LITERAL1
+GENIEM_WRITE_DBYTES	LITERAL1
+GENIEM_REPORT_BYTES	LITERAL1
+GENIEM_REPORT_DBYTES	LITERAL1

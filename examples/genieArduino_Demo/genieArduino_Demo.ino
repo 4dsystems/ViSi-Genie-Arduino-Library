@@ -1,7 +1,7 @@
 #include <genieArduino.h>
 
 // This Demo communicates with a 4D Systems Display, configured with ViSi-Genie, utilising the Genie Arduino Library - https://github.com/4dsystems/ViSi-Genie-Arduino-Library.
-// The display has a slider, a cool gauge, an LED Digits, a string box and a User LED.
+// The display has a slider, a cool gauge, an LED Digits, a string box and a User LED. Workshop4 Demo Project is located in the /extras folder
 // The program receives messages from the Slider0 object using the Reported Events. This is triggered each time the Slider changes on the display, and an event
 // is genereated and sent automatically. Reported Events originate from the On-Changed event from the slider itself, set in the Workshop4 software.
 // Coolgauge is written to using Write Object, and the String is updated using the Write String command, showing the version of the library.
@@ -14,22 +14,23 @@
 
 // This demo illustrates how to use genie.ReadObject, genie.WriteObject, Reported Messages (Events), genie.WriteStr, genie.WriteContrast, plus supporting functions.
 
-// Application Notes on the 4D Systems Website that are useful to understand this library are found: http://www.4dsystems.com.au/appnotes 
+// Application Notes on the 4D Systems Website that are useful to understand this library are found: https://docs.4dsystems.com.au/app-notes
 // Good App Notes to read are: 
-// ViSi-Genie Connecting a 4D Display to an Arduino Host - http://www.4dsystems.com.au/appnote/4D-AN-00017/
-// ViSi-Genie Writing to Genie Objects Using an Arduino Host - http://www.4dsystems.com.au/appnote/4D-AN-00018/
-// ViSi-Genie A Simple Digital Voltmeter Application using an Arduino Host - http://www.4dsystems.com.au/appnote/4D-AN-00019/
-// ViSi-Genie Connection to an Arduino Host with RGB LED Control - http://www.4dsystems.com.au/appnote/4D-AN-00010/
-// ViSi-Genie Displaying Temperature values from an Arduino Host - http://www.4dsystems.com.au/appnote/4D-AN-00015/
-// ViSi-Genie Arduino Danger Shield - http://www.4dsystems.com.au/appnote/4D-AN-00025/
+// ViSi-Genie Connecting a 4D Display to an Arduino Host - https://docs.4dsystems.com.au/app-note/4D-AN-00017/
+// ViSi-Genie Writing to Genie Objects Using an Arduino Host - https://docs.4dsystems.com.au/app-note/4D-AN-00018/
+// ViSi-Genie A Simple Digital Voltmeter Application using an Arduino Host - https://docs.4dsystems.com.au/app-note/4D-AN-00019/
+// ViSi-Genie Connection to an Arduino Host with RGB LED Control - https://docs.4dsystems.com.au/app-note/4D-AN-00010/
+// ViSi-Genie Displaying Temperature values from an Arduino Host - https://docs.4dsystems.com.au/app-note/4D-AN-00015/
+// ViSi-Genie Arduino Danger Shield - https://docs.4dsystems.com.au/app-note/4D-AN-00025
 
 Genie genie;
 #define RESETLINE 4  // Change this if you are not using an Arduino Adaptor Shield Version 2 (see code below)
 void setup()
 {
-  // NOTE, the genieBegin function (e.g. genieBegin(GENIE_SERIAL_0, 115200)) no longer exists.  Use a Serial Begin and serial port of your choice in
-  // your code and use the genie.Begin function to send it to the Genie library (see this example below)
+  // Use a Serial Begin and serial port of your choice in your code and use the 
+  // genie.Begin function to send it to the Genie library (see this example below)
   // 200K Baud is good for most Arduinos. Galileo should use 115200.  
+  // Some Arduino variants use Serial1 for the TX/RX pins, as Serial0 is for USB.
   Serial.begin(200000);  // Serial0 @ 200000 (200K) Baud
   genie.Begin(Serial);   // Use Serial0 for talking to the Genie Library, and to the 4D Systems display
 
@@ -44,12 +45,14 @@ void setup()
   delay(100);
   digitalWrite(RESETLINE, 0);  // unReset the Display via D4
 
-  delay (3500); //let the display start up after the reset (This is important)
+  // Let the display start up after the reset (This is important)
+  // Increase to 4500 or 5000 if you have sync problems as your project gets larger. Can depent on microSD init speed.
+  delay (3500); 
 
   // Set the brightness/Contrast of the Display - (Not needed but illustrates how)
-  // Most Displays, 1 = Display ON, 0 = Display OFF. See below for exceptions and for DIABLO16 displays.
-  // For uLCD-43, uLCD-220RD, uLCD-70DT, and uLCD-35DT, use 0-15 for Brightness Control, where 0 = Display OFF, though to 15 = Max Brightness ON.
-  genie.WriteContrast(1); 
+  // Most Displays use 0-15 for Brightness Control, where 0 = Display OFF, though to 15 = Max Brightness ON.
+  // Some displays are more basic, 1 (or higher) = Display ON, 0 = Display OFF.  
+  genie.WriteContrast(10); // About 2/3 Max Brightness
 
   //Write a string to the Display to show the version of the library used
   genie.WriteStr(0, GENIE_VERSION);

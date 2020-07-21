@@ -5,7 +5,8 @@
  * 
  * Demo uses Hardware Serial0 to communicate with the 4D Systems display module.
  * Simply create a Workshop4 Genie application for your 4D Systems display module, 
- * and place a 'Strings' object on the display, and download it to your module.
+ * and place a single 'Strings' object on the display, and download it to your module.
+ * It will have the ID Strings0. This is then populated with data in the demo code below.
  * 
  * PLEASE NOTE: If you are using a non-AVR Arduino, such as a Due, or other variants
  * such as a Chipkit or Teensy, then you will need to comment out the Flash String 
@@ -20,11 +21,11 @@ Genie genie;
 
 // Setup function
 void setup()
-{
-  // NOTE, the genieBegin function (e.g. genieBegin(GENIE_SERIAL_0, 115200)) no longer exists.  
+{ 
   // Use a Serial Begin and serial port of your choice in your code and use the genie.Begin function to send 
   // it to the Genie library (see this example below)
-  // max of 200K Baud is good for most Arduinos. Galileo should use 115200 or below.  
+  // max of 200K Baud is good for most Arduinos. Galileo should use 115200 or below.
+  // Some Arduino variants use Serial1 for the TX/RX pins, as Serial0 is for USB.  
   Serial.begin(9600);  // Serial0 @ 9600 Baud
   genie.Begin(Serial);   // Use Serial0 for talking to the Genie Library, and to the 4D Systems display
   
@@ -50,7 +51,7 @@ void loop()
   double z = 175.3456;
   int digits = 3;
   String Str = "This is string class";
-  genie.WriteStr(0, "TEST");
+  genie.WriteStr(0, "TEST");	// Write to String0 Object, with the string "TEST"
   delay(1000);
   genie.WriteStr(0, z, digits); //3 decimal places
   delay(1000);

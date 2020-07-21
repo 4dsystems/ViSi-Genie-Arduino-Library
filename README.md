@@ -1,20 +1,23 @@
 ![image](http://www.4dsystems.com.au/downloads/4DLogo.png)
 
-ViSi-Genie-Arduino-Library
+ViSi-Genie-Arduino-Library (A.K.A genieArduino)
 ==============================================================
 
 Arduino Library for 4D Systems ViSi-Genie Environment
 
-This library now supports support for neagative numbers, unsigned longs, unsigned integers with the WriteStr function.
-This library now features enhanced String Writing capability, no longer is a character Array the only viable option. 
-This library recently included support for the new Workshop4 PRO features.
-This library recently added support for 2+ displays connected to a single Arduino, and adds a new Demo to illustrate how that is achieved.
+This library supports the following:
+Support for neagative numbers, unsigned longs, unsigned integers with the WriteStr function.
+Features enhanced String Writing capability, no longer is a character Array the only viable option. 
+Support for Workshop4 PRO features.
+2+ displays connected to a single Arduino, and adds a Demo to illustrate how that is achieved.
+New Internal and Inherent Widgets.
+Much more...
 
 ## Information
 
 This library provides high level functions for the Arduino, to ease communication with 4D Systems modules when using the module configured with ViSi-Genie.
 Workshop4 PRO adds additional features to ViSi-Genie, allowing the User to write 4DGL code which can be executed at will from ViSi-Genie, enabling many advanced features not previously possible.
-Please refer to the 4D Systems website, namingly the Workshop 4 Product Page, for documentation regarding Workshop 4, and its environments.
+Please refer to the 4D Systems website, namingly the Workshop4 Product Page, for documentation regarding Workshop4, and its environments.
 
 ## Installation
 
@@ -25,6 +28,8 @@ PLEASE ensure that the old library (if installed) has been removed completely so
 For more information on the installation, please refer to [Installing Additional Arduino Libraries] (http://arduino.cc/en/Guide/Libraries)
 
 Open the ViSi-Genie project using Workshop4 and download to your display, connect the display to Arduino, reset the Arduino and it should work.
+
+This library should be discoverable from the Arduino IDE Library Manager too.
 
 ## Example Sketch
 
@@ -37,11 +42,11 @@ Any problems discovered with this library, please contact technical support so f
 
 ## Compatible 4D Systems Display Modules
 
-This library will work with all 4D Systems Modules which are capable of using the ViSi-Genie environment. This is therefore all Picaso and Diablo16 Display Modules.
-The demo included with this library was made for the uLCD-32PTU however can easily be adapted to other size displays.
+This library will work with all 4D Systems Modules which are capable of using the ViSi-Genie environment. This is therefore all Picaso, Pixxi-28, Pixxi-44 and Diablo16 Display Modules.
+The demo included with this library was made for the gen4-uLCD-32DCT-CLB (3.2" Capacitive Touch gen4 module) however can easily be adapted to other size displays.
 
 ## Questions/Issues?
 
 Please sign up for our Forum and ask a question there, or submit a Tech Support Ticket from our website.
-Please do NOT post issues on Github, as this is not actively monitored. Please use one of the following:
 http://forum.4dsystems.com.au or http://www.4dsystems.com.au/support
+Feel free to add a Github issue if you find a problem, we will do our best to help solve the problem.

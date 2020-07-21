@@ -1,10 +1,11 @@
-/////////////////// GenieArduino v1.4.5 04/08/2017 ///////////////////////
+/////////////////// GenieArduino v1.5.0 20/07/2020 ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //      Improvements/Updates by
+//		  v1.5.0 4D Systems Engineering, July 2020, www.4dsystems.com.au
 //        v1.4.5 4D Systems Engineering, August 2017, www.4dsystems.com.au
 //        v1.4.4 4D Systems Engineering, October 2015, www.4dsystems.com.au
 //        v1.4.3 4D Systems Engineering, September 2015, www.4dsystems.com.au
@@ -415,7 +416,7 @@ uint16_t Genie::DoEvents (bool DoHandler) {
         }
         return GENIE_EVENT_RXCHAR;
     }
-    return GENIE_EVENT_RXCHAR; // What should we really return here?!
+    return GENIE_EVENT_RXCHAR; 
 }
 
 //////////////////////// Genie::Getchar //////////////////////////
@@ -476,7 +477,7 @@ void Genie::FlushSerialInput(void) {
 // time to stop talking, then it flushes everything so the link
 // can start again.
 //
-// Untested, will need work I'm sure.
+// Future improvement work will be required here.
 //
 void Genie::Resync (void) {
     //for (long timeout = millis() + RESYNC_PERIOD ; millis() < timeout;) {};
@@ -668,6 +669,38 @@ uint16_t Genie::WriteObject (uint16_t object, uint16_t index, uint16_t data) {
     */
     PushLinkState(GENIE_LINK_WFAN);
 }
+
+/////////////////////// WriteIntLedDigits //////////////////
+//
+// Write 16-bit data to Internal LedDigits
+//
+uint16_t Genie::WriteIntLedDigits (uint16_t index, int16_t data) {
+    WriteObject(GENIE_OBJ_ILED_DIGITS_L, index, data);
+}
+
+/////////////////////// WriteIntLedDigits //////////////////
+//
+// Write 32-bit float data to Internal LedDigits
+//
+uint16_t Genie::WriteIntLedDigits (uint16_t index, float data) {
+    FloatLongFrame frame;
+    frame.floatValue = data;
+    WriteObject(GENIE_OBJ_ILED_DIGITS_H, index, frame.wordValue[1]);
+    WriteObject(GENIE_OBJ_ILED_DIGITS_L, index, frame.wordValue[0]);
+}
+
+/////////////////////// WriteIntLedDigits //////////////////
+//
+// Write 32-bit data to Internal LedDigits
+//
+uint16_t Genie::WriteIntLedDigits (uint16_t index, int32_t data) {
+    FloatLongFrame frame;
+    frame.longValue = data;
+    WriteObject(GENIE_OBJ_ILED_DIGITS_H, index, frame.wordValue[1]);
+    WriteObject(GENIE_OBJ_ILED_DIGITS_L, index, frame.wordValue[0]);
+}
+
+
 
 /////////////////////// WriteContrast //////////////////////
 //

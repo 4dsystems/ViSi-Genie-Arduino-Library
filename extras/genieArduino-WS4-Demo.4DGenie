@@ -1,5 +1,5 @@
 ﻿Version     0.0
-Platform    uLCD-32PTU-LR
+Platform    Gen4-uLCD-32DCT-CLB-LR
 PlatRes     240x320
 Depends
 end
@@ -10,10 +10,26 @@ Options
     ResponseSize                 1
     Multidrop                    No
     Destination                  1
+    DestBank                     0
+    MainForm                     0
     SndBuf                       2
+    ButtonDisable                No
+    SignedDigits                 No
+    MaxString                    75
+    ComPort                      0
+    ComTX1pinIdx                 0
+    ComRX1pinIdx                 0
+    FileSystem                   FATfs
+    FlashEraseOption             Optimal
+    SPIenable                    0
+    SPIsdo                       3
+    SPIsdi                       2
+    SPIsck                       1
+    FlashGT16MB                  No
 end
 Form
     Name                         Form0
+    Alias                        Form0
     Bgtype                       Color
     Color                        BLACK
     Image                        (None)
@@ -30,6 +46,7 @@ Form
 end
 LedDigits
     Name                         Leddigits0
+    Alias                        Leddigits0
     Color                        BLACK
     Decimals                     0
     Digits                       2
@@ -40,7 +57,6 @@ LedDigits
     Palette.High                 YELLOW
     Palette.Low                  BLACK
     Top                          8
-    Visible                      Yes
     Width                        105
     OnChanged                    ''
     OnTouchMoving                ''
@@ -49,7 +65,7 @@ LedDigits
 end
 Coolgauge
     Name                         Coolgauge0
-    Analogue                     (None)
+    Alias                        Coolgauge0
     Arc.Color                    0xFFEFE0
     Arc.Opacity                  200
     Arc.StartAngle               135
@@ -111,7 +127,6 @@ Coolgauge
     SubDivisionCount             3
     SubDivisionWidth             2
     TextRendering                ClearType
-    Timer                        (None)
     Top                          0
     ValueFont.Color              0x902F00
     ValueFont.Effects            []
@@ -119,12 +134,12 @@ Coolgauge
     ValueFont.Size               11
     ValueFont.Style              []
     ValueFormat                  0
-    Visible                      Yes
     Width                        192
     OnChanged                    ''
 end
 GSlider
     Name                         Slider0
+    Alias                        Slider0
     Bevel.BorderColor            clBtnFace
     Bevel.BorderWidth            0
     Bevel.InnerColor             BLACK
@@ -156,13 +171,13 @@ GSlider
     SolidFill                    Yes
     TickWidth                    1
     Top                          88
-    Visible                      Yes
     Width                        63
     OnChanged                    'Report Message'
     OnChanging                   ''
 end
 Strings
     Name                         Strings0
+    Alias                        Strings0
     Alignment                    Left
     BGcolor                      AQUA
     Height                       38
@@ -179,12 +194,12 @@ Strings
     Strings                      ''
     StringsStyle                 ''
     Top                          200
-    Visible                      Yes
     Width                        199
     OnChanged                    ''
 end
 UserLed
     Name                         Userled0
+    Alias                        Userled0
     Active                       Yes
     Bevel.BorderColor            clBtnFace
     Bevel.BorderWidth            0
@@ -212,12 +227,13 @@ UserLed
     PaletteEx.Low1               0x000051
     PaletteEx.Low2               BLACK
     Top                          204
-    Visible                      Yes
     Width                        43
     OnChanged                    ''
 end
 StaticText
     Name                         Statictext0
+    Alias                        Statictext0
+    Alignment                    Left
     AutoSize                     Yes
     Caption                      UserLED
     Color                        BLACK
@@ -230,7 +246,6 @@ StaticText
     Left                         72
     Top                          188
     Transparent                  Yes
-    Visible                      Yes
     Width                        45
     WordWrap                     Yes
 end

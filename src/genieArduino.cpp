@@ -1,10 +1,11 @@
-/////////////////// GenieArduino v1.5.0 20/07/2020 ///////////////////////
+/////////////////// GenieArduino v1.5.1 04/08/2020 ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //      Improvements/Updates by
+//		  v1.5.1 4D Systems Engineering, August 2020, www.4dsystems.com.au
 //		  v1.5.0 4D Systems Engineering, July 2020, www.4dsystems.com.au
 //        v1.4.5 4D Systems Engineering, August 2017, www.4dsystems.com.au
 //        v1.4.4 4D Systems Engineering, October 2015, www.4dsystems.com.au
@@ -23,7 +24,7 @@
 //      Based on code by
 //        Gordon Henderson, February 2013, <projects@drogon.net>
 //
-//      Copyright (c) 2012-2014 4D Systems Pty Ltd, Sydney, Australia
+//      Copyright (c) 2012-2020 4D Systems Pty Ltd, Sydney, Australia
 /*********************************************************************
  * This file is part of genieArduino:
  *    genieArduino is free software: you can redistribute it and/or modify
@@ -1024,6 +1025,272 @@ uint16_t Genie::WriteStrU (uint16_t index, uint16_t *string) {
     deviceSerial->write(checksum);
     PushLinkState(GENIE_LINK_WFAN);
     return 0;
+}
+
+/////////////////////// WriteInhLabel ////////////////////////
+//
+// Write a string to the display's Inherent Labeld
+// ASCII characters are 1 byte each
+//
+uint16_t Genie::WriteInhLabel (uint16_t index) {
+    WriteObject(GENIE_OBJ_ILABELB, index, -1);
+    return 0;
+}
+
+uint16_t Genie::WriteInhLabel (uint16_t index, char *string) {
+    char *p;
+    unsigned int checksum;
+    int len = strlen (string);
+
+    if (len > 255) {
+        return -1;
+    }
+
+    WaitForIdle();
+    deviceSerial->write(GENIE_WRITE_INH_LABEL);
+    checksum  = GENIE_WRITE_INH_LABEL;
+    deviceSerial->write(index);
+    checksum ^= index;
+    deviceSerial->write((unsigned char)len);
+    checksum ^= len;
+
+    for (p = string ; *p ; ++p) {
+        deviceSerial->write(*p);
+        checksum ^= *p;
+    }
+
+    deviceSerial->write(checksum);
+    PushLinkState(GENIE_LINK_WFAN);
+    return 0;
+}
+
+#ifdef AVR
+uint16_t Genie::WriteInhLabel(uint16_t index, const __FlashStringHelper *ifsh){
+	PGM_P p = reinterpret_cast<PGM_P>(ifsh);
+	PGM_P p2 = reinterpret_cast<PGM_P>(ifsh);
+	size_t n = 0;
+	int len = 0;
+	while (1) {
+		unsigned char d = pgm_read_byte(p2++);
+		len++;
+		if (d == 0) break;
+	}
+  
+ 
+	char arr[len];
+	int x = 0;
+	while (1) {
+		unsigned char c = pgm_read_byte(p++);
+		arr[x] = c;
+		x++;
+		if (c == 0) break;
+	}
+	WriteInhLabel(index, arr);
+	return 0;	
+}
+#endif
+
+uint16_t Genie::WriteInhLabel(uint16_t index, const String &s){
+	//s.c_str(), s.length()
+	int len = s.length();
+	char arr[len + 1];
+	s.toCharArray(arr,len + 1);
+	WriteInhLabel(index, arr);
+	return 0;	
+}
+
+
+uint16_t Genie::WriteInhLabel (uint16_t index, long n) { 
+	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
+	char *str = &buf[sizeof(buf) - 1];
+	
+	long N = n;
+	n = abs(n);
+
+	*str = '\0';
+
+	do {
+		unsigned long m = n;
+		n /= 10;
+		char c = m - 10 * n;
+		*--str = c < 10 ? c + '0' : c + 'A' - 10;
+	} while(n);
+	
+	if (N < 0) {
+		*--str = '-';
+	}
+	
+	WriteInhLabel(index, str);
+
+	return 0;
+}
+
+uint16_t Genie::WriteInhLabel (uint16_t index, long n, int base) { 
+	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
+	char *str = &buf[sizeof(buf) - 1];
+	
+	long N;
+	*str = '\0';
+	if(n>=0)
+	{
+		// prevent crash if called with base == 1
+		if (base < 2) base = 10;
+		if(base == 10)
+		{
+			N = n;
+			n = abs(n);
+		}
+	
+		do {
+			unsigned long m = n;
+			n /= base;
+			char c = m - base * n;
+			*--str = c < 10 ? c + '0' : c + 'A' - 10;
+		} while(n);
+		
+		if(base == 10)
+		{
+			if (N < 0) {
+				*--str = '-';
+			}
+		}
+			
+	}
+	
+	else if(n<0)
+	{
+		unsigned long n2 = (unsigned long)n;
+		uint8_t base2 = base;
+		do {
+		unsigned long m = n2;
+		n2 /= base2;
+		char c = m - base2 * n2;
+		*--str = c < 10 ? c + '0' : c + 'A' - 10;
+		} while(n2);
+		
+	}
+	
+    WriteInhLabel(index, str);
+	return 0;
+}
+
+uint16_t Genie::WriteInhLabel (uint16_t index, int n) { 
+	WriteInhLabel (index, (long) n);
+	return 0;
+}
+
+uint16_t Genie::WriteInhLabel (uint16_t index, int n, int base) { 
+	WriteInhLabel (index, (long) n, base);
+	return 0;
+}
+
+uint16_t Genie::WriteInhLabel (uint16_t index, unsigned long n) { 
+	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
+	char *str = &buf[sizeof(buf) - 1];
+	
+	long N = n;
+	n = abs(n);
+
+	*str = '\0';
+
+	do {
+		unsigned long m = n;
+		n /= 10;
+		char c = m - 10 * n;
+		*--str = c < 10 ? c + '0' : c + 'A' - 10;
+	} while(n);
+	
+	WriteInhLabel(index, str);
+	return 0;
+}
+
+uint16_t Genie::WriteInhLabel (uint16_t index, unsigned long n, int base) { 
+	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
+	char *str = &buf[sizeof(buf) - 1];
+	
+	*str = '\0';
+
+	// prevent crash if called with base == 1
+	if (base < 2) base = 10;
+	do {
+		unsigned long m = n;
+		n /= base;
+		char c = m - base * n;
+		*--str = c < 10 ? c + '0' : c + 'A' - 10;
+	} while(n);
+				
+    WriteInhLabel(index, str);
+	return 0;
+}
+
+uint16_t Genie::WriteInhLabel (uint16_t index, unsigned int n) { 
+	WriteInhLabel (index, (unsigned long) n);
+	return 0;
+}
+
+uint16_t Genie::WriteInhLabel (uint16_t index, unsigned n, int base) { 
+	WriteInhLabel (index, (unsigned long) n, base);
+	return 0;
+}
+
+
+uint16_t Genie::WriteInhLabel (uint16_t index, double number, int digits) { 
+	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
+	char *str = &buf[sizeof(buf) - 1];
+	*str = '\0';  
+
+	double number2 = number;
+	if (number < 0.0)
+	{
+	number = -number;
+	}
+
+	// Round correctly so that print(1.999, 2) prints as "2.00"
+	double rounding = 0.5;
+	for (int i=0; i<digits; ++i)
+	rounding /= 10.0;
+
+	number += rounding;
+
+	unsigned long int_part = (unsigned long)number;
+	double remainder = number - (double)int_part;
+
+	// Extract digits from the remainder one at a time
+	int digits2 = digits;
+	str = &buf[sizeof(buf) - 1 - digits2];
+	while (digits2-- > 0)
+	{
+	remainder *= 10.0;
+	int toPrint = int(remainder);
+	char c = toPrint + 48;
+	*str++ = c;
+	remainder -= toPrint; 
+	}
+	str = &buf[sizeof(buf) - 1 - digits];
+	if (digits > 0) {
+	*--str = '.';
+	}
+	// Extract the integer part of the number and print it  
+	do {
+	unsigned long m = int_part;
+	int_part /= 10;
+	char c = m - 10 * int_part;
+	*--str = c < 10 ? c + '0' : c + 'A' - 10;
+	} while(int_part);
+
+	// Handle negative numbers
+	if (number2 < 0.0)
+	{
+	 *--str = '-';
+	}
+
+	WriteInhLabel(index, str);
+
+	return 0;
+}
+
+uint16_t Genie::WriteInhLabel (uint16_t index, double n){
+	WriteInhLabel(index, n, 2);
 }
 
 /////////////////// AttachEventHandler //////////////////////

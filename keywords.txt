@@ -1,5 +1,5 @@
 #######################################
-# Syntax Coloring Map GenieArduino July 2020
+# Syntax Coloring Map GenieArduino August 2020
 #######################################
 
 #######################################
@@ -20,8 +20,9 @@ Begin	KEYWORD2
 ReadObject	KEYWORD2
 WriteObject	KEYWORD2
 WriteContrast	KEYWORD2
+WriteStr	KEYWORD2
 WriteStrU	KEYWORD2
-WriteStrU	KEYWORD2
+WriteInhLabel	KEYWORD2
 EventIs	KEYWORD2
 GetEventData	KEYWORD2
 DequeueEvent	KEYWORD2
@@ -29,8 +30,6 @@ DoEvents	KEYWORD2
 AttachEventHandler	KEYWORD2
 AttachMagicByteReader	KEYWORD2
 AttachMagicDoubleByteReader	KEYWORD2
-pulse	KEYWORD2
-assignDebugPort	KEYWORD2
 WriteMagicBytes	KEYWORD2
 WriteMagicDBytes	KEYWORD2
 GetNextByte	KEYWORD2
@@ -100,7 +99,7 @@ GENIE_OBJ_ISMARTKNOB	LITERAL1
 GENIE_OBJ_ILED_DIGITS_H	LITERAL1
 GENIE_OBJ_IANGULAR_METER	LITERAL1
 GENIE_OBJ_IGAUGE	LITERAL1
-GENIE_OBJ_ILABEL	LITERAL1
+GENIE_OBJ_ILABELB	LITERAL1
 GENIE_OBJ_IUSER_GAUGE	LITERAL1
 GENIE_OBJ_IMEDIA_GAUGE	LITERAL1
 GENIE_OBJ_IMEDIA_THERMOMETER	LITERAL1

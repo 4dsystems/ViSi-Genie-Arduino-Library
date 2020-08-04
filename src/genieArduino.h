@@ -1,10 +1,11 @@
-/////////////////// GenieArduino v1.5.0 20/07/2020 ///////////////////////
+/////////////////// GenieArduino v1.5.1 04/08/2020 ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //      Improvements/Updates by
+//		  v1.5.1 4D Systems Engineering, August 2020, www.4dsystems.com.au
 //		  v1.5.0 4D Systems Engineering, July 2020, www.4dsystems.com.au
 //        v1.4.5 4D Systems Engineering, August 2017, www.4dsystems.com.au
 //        v1.4.4 4D Systems Engineering, October 2015, www.4dsystems.com.au
@@ -23,7 +24,7 @@
 //      Based on code by
 //        Gordon Henderson, February 2013, <projects@drogon.net>
 //
-//      Copyright (c) 2012-2013 4D Systems Pty Ltd, Sydney, Australia
+//      Copyright (c) 2012-2020 4D Systems Pty Ltd, Sydney, Australia
 /*********************************************************************
  * This file is part of genieArduino:
  *    genieArduino is free software: you can redistribute it and/or modify
@@ -55,7 +56,7 @@
 
 #undef GENIE_DEBUG
 
-#define GENIE_VERSION    "v1.5.0 - 20-07-2020" // DD-MM-YYYY
+#define GENIE_VERSION    "v1.5.1 - 04-08-2020" // DD-MM-YYYY
 
 // Genie commands & replys:
 
@@ -76,6 +77,8 @@
 #define GENIEM_WRITE_DBYTES     9
 #define GENIEM_REPORT_BYTES     10
 #define GENIEM_REPORT_DBYTES    11
+#define GENIE_WRITE_INH_LABEL   12
+
 
 // Objects
 //    the manual says:
@@ -128,7 +131,7 @@
 #define GENIE_OBJ_ILED_DIGITS_H         38
 #define GENIE_OBJ_IANGULAR_METER        39
 #define GENIE_OBJ_IGAUGE                40
-#define GENIE_OBJ_ILABEL                41
+#define GENIE_OBJ_ILABELB               41
 #define GENIE_OBJ_IUSER_GAUGE           42
 #define GENIE_OBJ_IMEDIA_GAUGE          43
 #define GENIE_OBJ_IMEDIA_THERMOMETER    44
@@ -245,6 +248,24 @@ public:
 	uint16_t	WriteStr			(uint16_t index, double n, int digits);
 	uint16_t	WriteStr			(uint16_t index, double n);	
     uint16_t    WriteStrU           (uint16_t index, uint16_t *string);
+
+    uint16_t    WriteInhLabel       (uint16_t index);
+    uint16_t    WriteInhLabel       (uint16_t index, char *string);
+	uint16_t	WriteInhLabel		(uint16_t index, long n) ;
+	uint16_t	WriteInhLabel		(uint16_t index, long n, int base) ;
+	uint16_t	WriteInhLabel		(uint16_t index, unsigned long n) ;
+	uint16_t	WriteInhLabel		(uint16_t index, unsigned long n, int base) ;
+	uint16_t	WriteInhLabel		(uint16_t index, int n) ;
+	uint16_t	WriteInhLabel		(uint16_t index, int n, int base) ;
+	uint16_t	WriteInhLabel		(uint16_t index, unsigned int n) ;
+	uint16_t	WriteInhLabel		(uint16_t index, unsigned int n, int base) ;
+	uint16_t	WriteInhLabel		(uint16_t index, const String &s);
+#ifdef AVR
+	uint16_t	WriteInhLabel		(uint16_t index, const __FlashStringHelper *ifsh);
+#endif
+	uint16_t	WriteInhLabel		(uint16_t index, double n, int digits);
+	uint16_t	WriteInhLabel		(uint16_t index, double n);	
+
     bool        EventIs             (genieFrame * e, uint8_t cmd, uint8_t object, uint8_t index);
     uint16_t    GetEventData        (genieFrame * e);
     bool        DequeueEvent        (genieFrame * buff);

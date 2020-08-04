@@ -147,8 +147,8 @@ Updates the String widget specified by *index* with a string stored in program s
 | index      | Index number of target String |
 | ifsh       | Flash string containing the text to print in the String widget |
 
-    genie.WriteStr(1, F("Hello from Flash Memory")); // For AVR Arduinos only
-													 // Writes the string stored in flash memory to String1
+    // Writes the string stored in flash memory to String1
+	genie.WriteStr(1, F("Hello from Flash Memory")); // For AVR Arduinos only
                                                     
 ### WriteStr(uint16_t index, const String &s)
 Updates the String widget specified by *index* with a String widget specified by *s*

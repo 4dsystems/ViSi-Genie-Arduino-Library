@@ -71,7 +71,7 @@ Sets the display contrast/brightness to a new *value*
 
 | Parameters | Description |
 |:----------:| ----------- |
-| value      | New brightness/contrast value. The range of this value depends on the 4D display, Typcally 0-15 Range |
+| value      | New brightness/contrast value. The range of this value depends on the 4D display, Typically 0-15 Range |
 
     genie.WriteContrast(0); // Sets the contrast/brightness value to 0, effectively turning off the backlight
     genie.WriteContrast(10); // Sets the contrast/brightness value to 10, about 2/3 max brightness

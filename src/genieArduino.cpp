@@ -431,7 +431,6 @@ uint16_t Genie::DoEvents (bool DoHandler) {
 // Sets:    Error with any errors encountered
 //
 uint8_t Genie::Getchar() {
-    uint16_t result;
     Error = ERROR_NONE;
     return GetcharSerial();
 }
@@ -579,6 +578,7 @@ bool Genie::EnqueueEvent (uint8_t * data) {
         handleError();
         return FALSE;
     }
+    return FALSE;
 }
 
 //////////////////////// Genie::ReadObject ///////////////////////
@@ -669,6 +669,7 @@ uint16_t Genie::WriteObject (uint16_t object, uint16_t index, uint16_t data) {
     }
     */
     PushLinkState(GENIE_LINK_WFAN);
+    return 0;
 }
 
 /////////////////////// WriteIntLedDigits //////////////////
@@ -677,6 +678,7 @@ uint16_t Genie::WriteObject (uint16_t object, uint16_t index, uint16_t data) {
 //
 uint16_t Genie::WriteIntLedDigits (uint16_t index, int16_t data) {
     WriteObject(GENIE_OBJ_ILED_DIGITS_L, index, data);
+    return 0;
 }
 
 /////////////////////// WriteIntLedDigits //////////////////
@@ -688,6 +690,7 @@ uint16_t Genie::WriteIntLedDigits (uint16_t index, float data) {
     frame.floatValue = data;
     WriteObject(GENIE_OBJ_ILED_DIGITS_H, index, frame.wordValue[1]);
     WriteObject(GENIE_OBJ_ILED_DIGITS_L, index, frame.wordValue[0]);
+    return 0;
 }
 
 /////////////////////// WriteIntLedDigits //////////////////
@@ -699,6 +702,7 @@ uint16_t Genie::WriteIntLedDigits (uint16_t index, int32_t data) {
     frame.longValue = data;
     WriteObject(GENIE_OBJ_ILED_DIGITS_H, index, frame.wordValue[1]);
     WriteObject(GENIE_OBJ_ILED_DIGITS_L, index, frame.wordValue[0]);
+    return 0;
 }
 
 
@@ -882,7 +886,7 @@ uint16_t Genie::WriteStr (uint16_t index, unsigned long n) {
 	char *str = &buf[sizeof(buf) - 1];
 	
 	long N = n;
-	n = abs(n);
+	n = abs((long)n);
 
 	*str = '\0';
 
@@ -984,7 +988,7 @@ uint16_t Genie::WriteStr (uint16_t index, double number, int digits) {
 
 uint16_t Genie::WriteStr (uint16_t index, double n){
 	WriteStr(index, n, 2);
-
+    return 0;
 }
 
 /////////////////////// WriteStrU ////////////////////////
@@ -1189,7 +1193,7 @@ uint16_t Genie::WriteInhLabel (uint16_t index, unsigned long n) {
 	char *str = &buf[sizeof(buf) - 1];
 	
 	long N = n;
-	n = abs(n);
+	n = abs((long)n);
 
 	*str = '\0';
 
@@ -1291,6 +1295,7 @@ uint16_t Genie::WriteInhLabel (uint16_t index, double number, int digits) {
 
 uint16_t Genie::WriteInhLabel (uint16_t index, double n){
 	WriteInhLabel(index, n, 2);
+    return 0;
 }
 
 /////////////////// AttachEventHandler //////////////////////

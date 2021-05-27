@@ -1,10 +1,11 @@
-/////////////////// GenieArduino v1.5.1 04/08/2020 ///////////////////////
+/////////////////// GenieArduino v1.5.2 27/05/2021 ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //      Improvements/Updates by
+//		  v1.5.2 4D Systems Engineering, May 2021, www.4dsystems.com.au
 //		  v1.5.1 4D Systems Engineering, August 2020, www.4dsystems.com.au
 //		  v1.5.0 4D Systems Engineering, July 2020, www.4dsystems.com.au
 //        v1.4.5 4D Systems Engineering, August 2017, www.4dsystems.com.au
@@ -882,7 +883,6 @@ uint16_t Genie::WriteStr (uint16_t index, unsigned long n) {
 	char *str = &buf[sizeof(buf) - 1];
 	
 	long N = n;
-	n = abs(n);
 
 	*str = '\0';
 
@@ -1189,7 +1189,6 @@ uint16_t Genie::WriteInhLabel (uint16_t index, unsigned long n) {
 	char *str = &buf[sizeof(buf) - 1];
 	
 	long N = n;
-	n = abs(n);
 
 	*str = '\0';
 

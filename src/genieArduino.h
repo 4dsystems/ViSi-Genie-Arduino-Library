@@ -1,4 +1,4 @@
-/////////////////// GenieArduino v1.5.1 04/08/2020 ///////////////////////
+/////////////////// GenieArduino v1.5.2 27/05/2021 ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
@@ -56,7 +56,7 @@
 
 #undef GENIE_DEBUG
 
-#define GENIE_VERSION    "v1.5.1 - 04-08-2020" // DD-MM-YYYY
+#define GENIE_VERSION    "v1.5.2 - 27-05-2021" // DD-MM-YYYY
 
 // Genie commands & replys:
 

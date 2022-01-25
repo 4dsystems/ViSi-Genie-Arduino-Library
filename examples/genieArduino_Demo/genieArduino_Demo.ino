@@ -54,13 +54,15 @@ void setup()
   // Some displays are more basic, 1 (or higher) = Display ON, 0 = Display OFF.  
   genie.WriteContrast(10); // About 2/3 Max Brightness
 
-  //Write a string to the Display to show the version of the library used
+  //Write to String0 on the Display to show the version of the library used
   genie.WriteStr(0, GENIE_VERSION);
+  //OR to illustrate (comment out the above, uncomment the below)
+  genie.WriteStr(0, (String) "Hello 4D World");
 }
 
 void loop()
 {
-  static long waitPeriod = millis();
+  static unsigned long waitPeriod = millis();
   static int gaugeAddVal = 1; // Simulation code variable. Value to change the gauge by each loop
   static int gaugeVal = 50; // Simulation code variable. Value to start the gauge at when powered on
 

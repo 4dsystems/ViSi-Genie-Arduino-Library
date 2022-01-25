@@ -1,10 +1,11 @@
-/////////////////// GenieArduino v1.5.2 27/05/2021 ///////////////////////
+/////////////////////// GenieArduino ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //      Improvements/Updates by
+//		  v1.5.3 4D Systems Engineering, January 2022, www.4dsystems.com.au
 //		  v1.5.2 4D Systems Engineering, May 2021, www.4dsystems.com.au
 //		  v1.5.1 4D Systems Engineering, August 2020, www.4dsystems.com.au
 //		  v1.5.0 4D Systems Engineering, July 2020, www.4dsystems.com.au
@@ -25,7 +26,7 @@
 //      Based on code by
 //        Gordon Henderson, February 2013, <projects@drogon.net>
 //
-//      Copyright (c) 2012-2020 4D Systems Pty Ltd, Sydney, Australia
+//      Copyright (c) 2012-2022 4D Systems Pty Ltd, Sydney, Australia
 /*********************************************************************
  * This file is part of genieArduino:
  *    genieArduino is free software: you can redistribute it and/or modify
@@ -143,7 +144,7 @@ bool Genie::EventIs(genieFrame * e, uint8_t cmd, uint8_t object, uint8_t index) 
 //
 void Genie::WaitForIdle (void) {
     uint16_t do_event_result;
-    long timeout = millis() + Timeout;
+    unsigned long timeout = millis() + Timeout;
 
     for ( ; millis() < timeout;) {
         do_event_result = DoEvents(false);
@@ -432,7 +433,6 @@ uint16_t Genie::DoEvents (bool DoHandler) {
 // Sets:    Error with any errors encountered
 //
 uint8_t Genie::Getchar() {
-    uint16_t result;
     Error = ERROR_NONE;
     return GetcharSerial();
 }
@@ -580,6 +580,7 @@ bool Genie::EnqueueEvent (uint8_t * data) {
         handleError();
         return FALSE;
     }
+    return FALSE;
 }
 
 //////////////////////// Genie::ReadObject ///////////////////////
@@ -670,6 +671,7 @@ uint16_t Genie::WriteObject (uint16_t object, uint16_t index, uint16_t data) {
     }
     */
     PushLinkState(GENIE_LINK_WFAN);
+    return FALSE;
 }
 
 /////////////////////// WriteIntLedDigits //////////////////
@@ -678,6 +680,7 @@ uint16_t Genie::WriteObject (uint16_t object, uint16_t index, uint16_t data) {
 //
 uint16_t Genie::WriteIntLedDigits (uint16_t index, int16_t data) {
     WriteObject(GENIE_OBJ_ILED_DIGITS_L, index, data);
+    return TRUE;
 }
 
 /////////////////////// WriteIntLedDigits //////////////////
@@ -689,6 +692,7 @@ uint16_t Genie::WriteIntLedDigits (uint16_t index, float data) {
     frame.floatValue = data;
     WriteObject(GENIE_OBJ_ILED_DIGITS_H, index, frame.wordValue[1]);
     WriteObject(GENIE_OBJ_ILED_DIGITS_L, index, frame.wordValue[0]);
+    return TRUE;
 }
 
 /////////////////////// WriteIntLedDigits //////////////////
@@ -700,6 +704,7 @@ uint16_t Genie::WriteIntLedDigits (uint16_t index, int32_t data) {
     frame.longValue = data;
     WriteObject(GENIE_OBJ_ILED_DIGITS_H, index, frame.wordValue[1]);
     WriteObject(GENIE_OBJ_ILED_DIGITS_L, index, frame.wordValue[0]);
+    return TRUE;
 }
 
 
@@ -759,7 +764,6 @@ uint16_t Genie::WriteStr (uint16_t index, char *string) {
 uint16_t Genie::WriteStr(uint16_t index, const __FlashStringHelper *ifsh){
 	PGM_P p = reinterpret_cast<PGM_P>(ifsh);
 	PGM_P p2 = reinterpret_cast<PGM_P>(ifsh);
-	size_t n = 0;
 	int len = 0;
 	while (1) {
 		unsigned char d = pgm_read_byte(p2++);
@@ -881,8 +885,6 @@ uint16_t Genie::WriteStr (uint16_t index, int n, int base) {
 uint16_t Genie::WriteStr (uint16_t index, unsigned long n) { 
 	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
 	char *str = &buf[sizeof(buf) - 1];
-	
-	long N = n;
 
 	*str = '\0';
 
@@ -984,6 +986,7 @@ uint16_t Genie::WriteStr (uint16_t index, double number, int digits) {
 
 uint16_t Genie::WriteStr (uint16_t index, double n){
 	WriteStr(index, n, 2);
+    return 0;
 
 }
 
@@ -1068,7 +1071,6 @@ uint16_t Genie::WriteInhLabel (uint16_t index, char *string) {
 uint16_t Genie::WriteInhLabel(uint16_t index, const __FlashStringHelper *ifsh){
 	PGM_P p = reinterpret_cast<PGM_P>(ifsh);
 	PGM_P p2 = reinterpret_cast<PGM_P>(ifsh);
-	size_t n = 0;
 	int len = 0;
 	while (1) {
 		unsigned char d = pgm_read_byte(p2++);
@@ -1076,7 +1078,6 @@ uint16_t Genie::WriteInhLabel(uint16_t index, const __FlashStringHelper *ifsh){
 		if (d == 0) break;
 	}
   
- 
 	char arr[len];
 	int x = 0;
 	while (1) {
@@ -1187,8 +1188,6 @@ uint16_t Genie::WriteInhLabel (uint16_t index, int n, int base) {
 uint16_t Genie::WriteInhLabel (uint16_t index, unsigned long n) { 
 	char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
 	char *str = &buf[sizeof(buf) - 1];
-	
-	long N = n;
 
 	*str = '\0';
 
@@ -1290,6 +1289,7 @@ uint16_t Genie::WriteInhLabel (uint16_t index, double number, int digits) {
 
 uint16_t Genie::WriteInhLabel (uint16_t index, double n){
 	WriteInhLabel(index, n, 2);
+    return 0;
 }
 
 /////////////////// AttachEventHandler //////////////////////
@@ -1362,7 +1362,7 @@ uint16_t Genie::WriteMagicBytes (uint16_t index, uint8_t *bytes, uint16_t len) {
     deviceSerial->write((unsigned char)len);
     checksum ^= len;
 
-    for (int i = 0; i < len; i++) {
+    for (uint16_t i = 0; i < len; i++) {
         deviceSerial->write(bytes[i]);
         checksum ^= bytes[i];
     }
@@ -1391,7 +1391,7 @@ uint16_t Genie::WriteMagicDBytes (uint16_t index, uint16_t *shorts, uint16_t len
     deviceSerial->write((unsigned char)(len));
     checksum ^= (len);
 
-    for (int i = 0; i < len; i++) {
+    for (uint16_t i = 0; i < len; i++) {
         deviceSerial->write (shorts[i] >> 8);
         checksum ^= shorts[i] >> 8;
         deviceSerial->write (shorts[i] & 0xFF);

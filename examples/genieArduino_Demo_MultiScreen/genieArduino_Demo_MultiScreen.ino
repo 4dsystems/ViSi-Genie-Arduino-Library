@@ -76,7 +76,7 @@ void setup()
 
 void loop()
 {
-  static long waitPeriod = millis(); // Time now
+  static unsigned long waitPeriod = millis(); // Time now
   
   static int gaugeAddVal1 = 1; // Set the value at which the Gauge on Display 1 increases by initially
   static int gaugeVal1 = 10; // Starting Value for Gauge on Display 1

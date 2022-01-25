@@ -1,10 +1,12 @@
-/////////////////// GenieArduino v1.5.2 27/05/2021 ///////////////////////
+/////////////////////// GenieArduino ///////////////////////
 //
 //      Library to utilize the 4D Systems Genie interface to displays
 //      that have been created using the Visi-Genie creator platform.
 //      This is intended to be used with the Arduino platform.
 //
 //      Improvements/Updates by
+//		  v1.5.3 4D Systems Engineering, January 2022, www.4dsystems.com.au
+//		  v1.5.2 4D Systems Engineering, May 2021, www.4dsystems.com.au
 //		  v1.5.1 4D Systems Engineering, August 2020, www.4dsystems.com.au
 //		  v1.5.0 4D Systems Engineering, July 2020, www.4dsystems.com.au
 //        v1.4.5 4D Systems Engineering, August 2017, www.4dsystems.com.au
@@ -24,7 +26,7 @@
 //      Based on code by
 //        Gordon Henderson, February 2013, <projects@drogon.net>
 //
-//      Copyright (c) 2012-2020 4D Systems Pty Ltd, Sydney, Australia
+//      Copyright (c) 2012-2022 4D Systems Pty Ltd, Sydney, Australia
 /*********************************************************************
  * This file is part of genieArduino:
  *    genieArduino is free software: you can redistribute it and/or modify
@@ -56,7 +58,7 @@
 
 #undef GENIE_DEBUG
 
-#define GENIE_VERSION    "v1.5.2 - 27-05-2021" // DD-MM-YYYY
+#define GENIE_VERSION    (String)"v1.5.3 - 26-01-2022" // DD-MM-YYYY
 
 // Genie commands & replys:
 

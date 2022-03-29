@@ -50,6 +50,8 @@ void loop()
   long y = 171;
   double z = 175.3456;
   int digits = 3;
+  int temperature1 = 150;
+  float temperature2 = 12.3;
   String Str = "This is string class";
   genie.WriteStr(0, "TEST");	// Write to String0 Object, with the string "TEST"
   delay(1000);
@@ -82,6 +84,10 @@ void loop()
   delay(1000);
   unsigned long e = 1234 ;
   genie.WriteStr(0, e); //prints unsigned long
+  delay(1000);
+  genie.WriteStr(0, (String) temperature1 + (String) "\xB0"); // 150 with degree symbol (Standard Arial ANSI font, not Unicode)
+  delay(1000);
+  genie.WriteStr(0, (String) temperature2 + char(176) ); // same as above, done slightly differently
   delay(1000);
 }
 

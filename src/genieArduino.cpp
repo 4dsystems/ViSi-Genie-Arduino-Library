@@ -674,8 +674,8 @@ uint16_t Genie::WriteObject (uint16_t object, uint16_t index, uint16_t data) {
     return FALSE;
 }
 
-uint16_t Genie::WriteObject (uint16_t object, uint16_t index, float data) {
-    return WriteObject(object, index, round(data));
+uint16_t Genie::WriteObject (uint16_t object, uint16_t index, float data, uint scale) {
+    return WriteObject(object, index, round(data * scale));
 }
 
 /////////////////////// WriteIntLedDigits //////////////////

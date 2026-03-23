@@ -229,7 +229,7 @@ public:
     Genie();
     void        Begin               (Stream &serial);
     bool        ReadObject          (uint16_t object, uint16_t index);
-    uint16_t    WriteObject         (uint16_t object, uint16_t index, float data);
+    uint16_t    WriteObject         (uint16_t object, uint16_t index, float data, uint scale = 1);
     uint16_t    WriteObject         (uint16_t object, uint16_t index, uint16_t data);
     uint16_t    WriteIntLedDigits   (uint16_t index, int16_t data);
     uint16_t    WriteIntLedDigits   (uint16_t index, float data);
